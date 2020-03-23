@@ -33,8 +33,7 @@
 <%-- 
    forEach-> var="첨자의 변수명" begin="첨자변수의 시작값" end="첨자변수의 종료값"
                                              step="증가값" (1인경우에는 step값을 생략이 가능하다.)
-                                             **items="${배열및 객체명}" ->html주석에서는 적용X
-                                                                                                      에러유발
+                                             **items="${배열및 객체명}" ->html주석에서는 적용X 에러유발
  --%>                                                                           
 <c:set var="sum" value="0" />
 <c:forEach var="i"  begin="1" end="100" step="2">
