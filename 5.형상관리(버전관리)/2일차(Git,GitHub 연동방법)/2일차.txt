@@ -244,8 +244,7 @@ Please commit your changes or stash them before you switch branches.
 Aborting
 
  =>반드시 다른 브랜치로 이동하기위해서는 지금까지 작업한 내용을
-     반드시 커밋을 해야 이동할 수 있다는 에러메세지(등록한 사용자이름
-                                                                       메일등록)
+     반드시 커밋을 해야 이동할 수 있다는 에러메세지(등록한 사용자이름 메일등록)
 ====================================
 
 kitcoop@kitcoop-PC MINGW64 /c/imsi (hotfix)
@@ -290,8 +289,7 @@ $ vim test.txt
 kitcoop@kitcoop-PC MINGW64 /c/imsi (master|MERGING)
 $
 ====================================
-git commit -a =>편집기로 들어가서 내용을 수정->저장
-                         불편하다.
+git commit -a =>편집기로 들어가서 내용을 수정->저장 -> 불편하다.
 
 ---------------------------------------------------------
 **git commit -a -m "커밋메세지" ->바로 반영이 된다.
