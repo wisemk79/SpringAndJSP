@@ -1,0 +1,450 @@
+13일차(모델1의 게시판-글상세보기 및 글 답변달기,글수정하기)
+
+ 중간 평가->과제 제출=>1) 화면 캡처  2) 프로젝트 발표자료
+                                                      팀별,개별
+***************************************************************
+  jsp,javascript,->euckr->UTF-8로 변경
+*********************필기 시험*******************************
+ 4월 1일 (JSP,Ajax,jQuery)
+ 4월 28일 Spring 시험
+
+ 5월  11일 Angular 
+ 5월  18일 React 
+ 5월  22일 Vue.js
+**************************************************************
+1.글상세보기->글답변달기도 같이 구현
+
+1.MemberDAO에서 insertArticle 메서드 추가
+                         글상세보기를 위한 getBoard()를 구현
+
+  댓글을 다는 로직
+
+num writer  ,,,,      ref   re_step   re_level
+ 1     aaa              0       0            0 =>신규글
+          |
+           -aaa-1     0         1            1
+               |        
+                    <===========
+                 aaa-3 0       2             2  (새로 추가된 답변글)
+                -aaa-2  0      2->3            2 (전의 답변글)
+             
+             
+
+ 정렬이 되면서 화면에 출력(가장 최근의 글이 올라온다.)
+ ~order by ref desc,re_step asc limit ? ,?
+ ---------------------------------------------------
+         같은 레벨에서의 답변을 다는 로직
+
+ 2     bbb            1       0            0
+ 3     ccc             2       0            0 
+ 4     ddd            3       0            0
+
+  ** 답변글을 쓰는 경우(SQL구문 정리) ***
+
+  1.sql="update board set re_step=re_step+1 where ref=? and re_step > ?";
+    =>답변을 달 수 있도록 위치를 설정
+  2.sql="insert into board(writer,email,subject,passwd,reg_date,";
+    sql+=" ref,re_step,re_level,content,ip)values(?,?,?,?,?,?,?,?,?,?)";
+   =>위치에 저장
+
+  ** 신규글을 쓰는 경우(SQL) **
+ 
+  sql="insert into board(writer,email,subject,passwd,reg_date,";
+  sql+=" ref,re_step,re_level,content,ip)values(?,?,?,?,?,?,?,?,?,?)";
+
+=======================================
+//글상세보기->list.jsp
+	// <a href="content.jsp?num=3&pageNum=1">게시판이란?</a>
+	//형식) select * from board where num=3;
+	//형식2) update board set readcount=readcount+1 where num=3
+	public BoardDTO getArticle(int num) {
+		BoardDTO article=null;
+		
+		try {
+			con=pool.getConnection();
+			sql="update board set readcount=readcount+1 where num=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			int update=pstmt.executeUpdate();
+			System.out.println("조회수 증가유무(update)=>"+update);
+			
+			sql="select * from board where num=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			rs=pstmt.executeQuery();
+			
+			if(rs.next()) {//레코드가 존재한다면
+			    article=new BoardDTO();//MemberDTO mem=new MemberDTO()
+				article.setNum(rs.getInt("num"));
+				article.setWriter(rs.getString("writer"));
+				article.setEmail(rs.getString("email"));
+				article.setSubject(rs.getString("subject"));
+				article.setPasswd(rs.getString("passwd"));
+				article.setReg_date(rs.getTimestamp("reg_date"));//오늘날짜->코딩 now()
+				article.setReadcount(rs.getInt("readcount"));//default->0
+				article.setRef(rs.getInt("ref"));//그룹번호->신규글과 답변글 묶어주는 번호
+				article.setRe_step(rs.getInt("re_step"));//답변글의 순서
+				article.setRe_level(rs.getInt("re_level"));//들여쓰기(답변의 깊이)
+				article.setContent(rs.getString("content"));//글내용
+				article.setIp(rs.getString("ip"));
+			}
+		}catch(Exception e) {
+			System.out.println("getArticle()메서드 에러유발"+e);
+		}finally {
+			pool.freeConnection(con, pstmt,rs);
+		}
+		return article;
+	}
+
+2.content.jsp를 구현
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"
+    import="lys.board.*,java.text.SimpleDateFormat"%>
+<!DOCTYPE html>
+<html>
+<head>
+<title>내용확인</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+</head>
+<%
+   //list.jsp에서 링크 content.jsp?num=3&pageNum=1
+   int num=Integer.parseInt(request.getParameter("num"));
+   String pageNum=request.getParameter("pageNum");
+   SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm");
+   BoardDAO dbPro=new BoardDAO();
+   BoardDTO article=dbPro.getArticle(num);//메서드의 매개변수자료형이 int
+   //링크문자열의 길이를 줄이기 위해서,전달해주기 전의 값 확인
+   int ref=article.getRef();
+   int re_step=article.getRe_step();
+   int re_level=article.getRe_level();
+   System.out.println("content.jsp의 매개변수");
+   System.out.println("ref=>"+ref+",re_step=>"+re_step+",re_level=>"+re_level);
+%>
+<body bgcolor="#e0ffff">  
+<center><b>글내용 보기</b>
+<br>
+<form>
+<table width="500" border="1" cellspacing="0" cellpadding="0"  bgcolor="#e0ffff" align="center">  
+  <tr height="30">
+    <td align="center" width="125" bgcolor="#b0e0e6">글번호</td>
+    <td align="center" width="125" align="center">
+	     <%=article.getNum() %></td>
+    <td align="center" width="125" bgcolor="#b0e0e6">조회수</td>
+    <td align="center" width="125" align="center">
+	     <%=article.getReadcount() %></td>
+  </tr>
+  <tr height="30">
+    <td align="center" width="125" bgcolor="#b0e0e6">작성자</td>
+    <td align="center" width="125" align="center">
+	     <%=article.getWriter() %></td>
+    <td align="center" width="125" bgcolor="#b0e0e6" >작성일</td>
+    <td align="center" width="125" align="center">
+	     <%=sdf.format(article.getReg_date()) %></td>
+  </tr>
+  <tr height="30">
+    <td align="center" width="125" bgcolor="#b0e0e6">글제목</td>
+    <td align="center" width="375" align="center" colspan="3">
+	     <%=article.getSubject() %></td>
+  </tr>
+  <tr>
+    <td align="center" width="125" bgcolor="#b0e0e6">글내용</td>
+    <td align="left" width="375" colspan="3"><pre><%=article.getContent() %></pre></td>
+  </tr>
+  <tr height="30">   
+  <!--onclick="document.location.href=요청페이지.jsp?매개변수=값&매개변수2=값2"  -->   
+    <td colspan="4" bgcolor="#b0e0e6" align="right" > 
+	  <input type="button" value="글수정" 
+       onclick="document.location.href='updateForm.jsp?num=<%=article.getNum()%>&pageNum=<%=pageNum%>'">
+	   &nbsp;&nbsp;&nbsp;&nbsp;
+	  <input type="button" value="글삭제" 
+       onclick="document.location.href='deleteForm.jsp?num=<%=article.getNum()%>&pageNum=<%=pageNum%>'">
+	   &nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="button" value="답글쓰기" 
+       onclick="document.location.href='writeForm.jsp?num=<%=num%>&ref=<%=ref%>&re_step=<%=re_step%>&re_level=<%=re_level%>'">
+	   &nbsp;&nbsp;&nbsp;&nbsp;
+       <input type="button" value="글목록" 
+       onclick="document.location.href='list.jsp?pageNum=<%=pageNum%>'">
+    </td>
+  </tr>
+</table>    
+</form>      
+</body>
+</html>      
+=============================================
+=>JNDI 방법을 이용해서 DB연결하는 코딩
+   =>java:comp/env
+       jdbc/jsptest=>JNDI이름=>이름으로 접속해서 DB를 연결하는
+                                          방법=>JNDI DB방법
+***********************>스프링 게시판*******************************
+** BoardDAO에서의 수정에 관련된 메서드 작성 3개 **
+
+//--중복된 레코드 한개를 담을 수 있는 메서드를 따로 만들어서 호출하자.->공개X
+	//DB연동에 관련된 것은 반드시 예외처리해야 된다.
+	private BoardDTO makeArticleFromResult() throws Exception {
+		BoardDTO article=new BoardDTO();
+    	article.setNum(rs.getInt("num"));
+    	article.setWriter(rs.getString("writer"));
+    	article.setEmail(rs.getString("email"));
+    	article.setSubject(rs.getString("subject"));
+    	article.setPasswd(rs.getString("passwd"));
+    	article.setReg_date(rs.getTimestamp("reg_date"));//오늘날짜
+    	//정수값(조회수,답변에 대한 필드)
+    	article.setReadcount(rs.getInt("readcount"));//default->0
+    	article.setRef(rs.getInt("ref"));//그룹번호
+    	article.setRe_step(rs.getInt("re_step"));//답변글의 순서
+    	article.setRe_level(rs.getInt("re_level"));//들여쓰기
+    	article.setContent(rs.getString("content"));//글내용
+    	article.setIp(rs.getString("ip"));//글쓴이의 ip주소
+    	return article;
+	}
+	
+	//5.글수정하기위한 메서드호출
+	//select * from board where num=?->조회수를 증가X
+	public BoardDTO updateGetArticle(int num) { //updateForm.jsp에서 호출
+		BoardDTO article=null;
+		
+		try {
+			con=pool.getConnection();
+			sql="select * from board where num=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			rs=pstmt.executeQuery();
+			//찾은 데이터가 있으면 담기
+			if(rs.next()) {
+				article=makeArticleFromResult();//중복코딩을 배제
+			}
+		}catch(Exception e) {
+			System.out.println("updateGetArticle()메서드 오류=>"+e);
+		}finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return article;
+	}
+	
+	//6.글수정하는 메서드호출->insertArticle와 거의 동일->1)SQL 2)암호를 인증
+	public int updateArticle(BoardDTO article) {  //updatePro.jsp에서 호출(암호입력)
+		String dbpasswd = null;// db에서 찾은 암호를 저장
+		int x = -1;// 게시물의 수정성공유무
+
+		// 1.암호먼저 찾아서 비교->승낙->2)update 수행이 가능
+		try {
+			con = pool.getConnection();
+			sql = "select passwd from board where num=?";// 최대값+1=>실제 저장할 게시물번호를 생성
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, article.getNum());
+			rs = pstmt.executeQuery();
+			if (rs.next()) {// 현재 테이블에서 데이터가 존재한다면
+				dbpasswd = rs.getString("passwd");
+				System.out.println("dbpasswd=>" + dbpasswd);// 암호확인용
+
+				// db상의 암호==웹상에 입력한 암호가 맞는지 확인
+				if (dbpasswd.contentEquals(article.getPasswd())) {
+
+					sql = "update board set writer=?,email=?,subject=?,passwd=?,";
+					sql += " content=?  where num=?";
+					// sql+=" ref,re_step,re_level,content,ip)values(?,?,?,?,now(),?,?,?,?,?)";
+					pstmt = con.prepareStatement(sql);// sysdate
+					pstmt.setString(1, article.getWriter());// 웹에 입력저장->Setter Method호출
+					pstmt.setString(2, article.getEmail());
+					pstmt.setString(3, article.getSubject());
+					pstmt.setString(4, article.getPasswd());
+					pstmt.setString(5, article.getContent());// 글내용
+					pstmt.setInt(6, article.getNum());
+
+					int update = pstmt.executeUpdate();
+					System.out.println("게시판의 글수정 성공유무(update)=>" + update);// 1성공, 0실패
+					x = 1;
+				} else {
+					x = 0;// 암호가 틀린경우(수정 실패)
+				}
+			}//if(rs.next()) 찾는 데이터가 있다면
+		} catch (Exception e) {
+			System.out.println("updateArticle 메서드오류발생=>" + e);
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return x;//1 or 0 or -1
+	}
+=============================================
+ updateForm.jsp와 updatePro.jsp를 작성=>수정
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"
+    import="lys.board.*" %>
+ <%
+    //한글처리=>수정한 내용은 저장,수정X->그대로 덮어쓰기
+    request.setCharacterEncoding("utf-8");
+ %>
+ <jsp:useBean id="article"  class="lys.board.BoardDTO" />
+ <jsp:setProperty name="article" property="*" />
+ <%
+    //정상적으로 수정됐을때 수정이 된 레코드로 이동->게시물이 수정된 페이지로 이동하라
+    String pageNum=request.getParameter("pageNum");
+    BoardDAO dbPro=new BoardDAO();//updateArticle메서드 호출하기위해서 
+    int check=dbPro.updateArticle(article);
+    
+    //수정이 성공했다면
+    if(check==1){ 
+    //response.sendRedirect("list.jsp");
+    //http-equiv="Refresh"=>새로고침 옵션 content="초단위(몇초동안 멈춘후);url="이동페이지명"
+ %>
+ <meta http-equiv="Refresh" content="0;url=list.jsp?pageNum=<%=pageNum%>">
+ <%}else { %>
+   <script>
+         alert("비밀번호가 맞지않습니다.\n 다시 비밀번호를 확인요망!")
+         history.go(-1)
+   </script>
+ <%} %>
+ ==========================================
+** 글삭제하기 구현 **
+
+ content.jsp=>글삭제하기 click->암호입력창(deleteForm.jsp)
+                                         =>확인클릭 ->deletePro.jsp
+                                                  게시물의 글을 삭제시켜주는
+                                                  메서드 호출
+
+ =>수정(암호), 삭제(암호 체크)=>공통점=>소스코드가 비슷
+ 1.BoardDAO에서 deleteArticle메서드 호출=>암호를 체크
+ 
+//7.글삭제하는 메서드 호출
+	//select passwd from board where num=?
+	//delete from board where num=?
+	public int deleteArticle(int num,String passwd) { //게시물번호 hidden객체로 전달받는다
+		
+		String dbpasswd = null;// db에서 찾은 암호를 저장
+		int x = -1;// 게시물의 삭제성공유무
+
+		// 1.암호먼저 찾아서 비교->승낙->2)update 수행이 가능
+		try {
+			con = pool.getConnection();
+			sql = "select passwd from board where num=?";// 최대값+1=>실제 저장할 게시물번호를 생성
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {// 현재 테이블에서 데이터가 존재한다면
+				dbpasswd = rs.getString("passwd");
+				System.out.println("dbpasswd=>" + dbpasswd);// 암호확인용
+
+				// db상의 암호==웹상에 입력한 암호가 맞는지 확인
+				if (dbpasswd.contentEquals(passwd)) {
+
+					sql = "delete from board  where num=?";
+					pstmt = con.prepareStatement(sql);// sysdate
+					pstmt.setInt(1,num);
+					int delete = pstmt.executeUpdate();
+					System.out.println("게시판의 글삭제 성공유무(delete)=>" + delete);// 1성공, 0실패
+					x = 1;//글삭제 성공
+				} else {
+					x = 0;// 암호가 틀린경우(삭제 실패)
+				}
+			}//if(rs.next()) 찾는 데이터가 있다면
+		} catch (Exception e) {
+			System.out.println("deleteArticle 메서드 오류발생=>" + e);
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return x;
+	}
+
+ 2.deleteForm.jsp->암호전달
+                          게시물번호도 같이 전달->deletePro.jsp
+                          deleteForm.jsp
+========================================
+ deleteForm.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<%
+    //content.jsp->deleteForm.jsp?num=2&pageNum=1
+    int num=Integer.parseInt(request.getParameter("num"));
+    String pageNum=request.getParameter("pageNum");//확인소스코드 생략
+%>
+<html>
+<head>
+<title>게시판</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+<script language="JavaScript">            
+  function deleteSave(){	
+	if(document.delForm.passwd.value==''){
+	alert("비밀번호를 입력하십시요.");
+	document.delForm.passwd.focus();
+	return false;
+ }
+}          
+</script>
+</head>
+<body bgcolor="#e0ffff">
+<center><b>글삭제</b>
+<br>
+<%--
+   hidden 객체를 사용하지 않은 경우
+   action="deletePro.jsp?num=<%=num%>&pageNum=<%=pageNum%>" 
+ --%>
+<form method="POST" name="delForm"  action="deletePro.jsp" 
+   onsubmit="return deleteSave()"> 
+ <table border="1" align="center" cellspacing="0" cellpadding="0" width="360">
+  <tr height="30">
+     <td align=center  bgcolor="#b0e0e6">
+       <b>비밀번호를 입력해 주세요.</b></td>
+  </tr>
+  <tr height="30">
+     <td align=center >비밀번호 :   
+       <input type="password" name="passwd" size="8" maxlength="12">
+	   <input type="hidden" name="num" value="<%=num%>">
+	   <input type="hidden" name="pageNum"  value="<%=pageNum%>">
+	   </td>
+ </tr>
+ <tr height="30">
+    <td align=center bgcolor="#b0e0e6">
+      <input type="submit" value="글삭제" >
+      <input type="button" value="글목록" 
+       onclick="document.location.href='list.jsp?pageNum=<%=pageNum%>'">     
+   </td>
+ </tr>  
+</table> 
+</form>
+</body>
+</html> 
+=========================================
+**deletePro.jsp**
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"
+    import="lys.board.*" %>
+ 
+ <%
+    //정상적으로 수정됐을때 수정이 된 레코드로 이동->게시물이 수정된 페이지로 이동하라
+    String pageNum=request.getParameter("pageNum");//hidden
+    //--------------------------------------------------------------------------
+    int num=Integer.parseInt(request.getParameter("num"));//hidden
+    String passwd=request.getParameter("passwd");//직접입력
+    //--------------------------------------------------------------------------
+    BoardDAO dbPro=new BoardDAO();//deleteArticle메서드 호출하기위해서 
+    int check=dbPro.deleteArticle(num,passwd);
+    
+    //삭제가 성공했다면
+    if(check==1){ 
+ %>
+ <meta http-equiv="Refresh" content="0;url=list.jsp?pageNum=<%=pageNum%>">
+ <%}else { %>
+   <script>
+         alert("비밀번호가 맞지않습니다.\n 다시 비밀번호를 확인요망!")
+         history.go(-1)
+   </script>
+ <%} %>
+=========================================== 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+
+
+
+

@@ -1,0 +1,312 @@
+9일차 (회원관리-우편번호검색,회원가입,회원수정 준비)
+                      ========= =====
+ex) 쇼핑몰         상품검색,회원검색,,,(테이블,필드명만 변경)
+
+ 우편번호 검색=>저장된 테이블의 내용을 원하는 검색어에 맞게
+                       불러와서 출력하는 방법(단순,반복=>유지보수)
+                       --------------------------------------------------
+
+ 회원가입->테이블에 데이터를 저장하는 방법(로직)
+               상품등록,고객등록,,,
+                ------------------------------------------
+//sql>select * from zipcode where area3 like '미아3동%';
+        select area1 from zipcode ~
+   필드한개 저장->자료형에 맞게 반환형 설정->String
+        select area1,area2 from zipcode ~
+   필드 한개이상 저장=>반환형의 자료형? DTO형으로 줄것.
+   레코드 한개->반환형 자료형 DTO형으로 준다.
+    ZipcodeBean
+   레코드 한개이상(최소 2개이상)
+    Vector<ZipcodeDTO>
+
+    Vector<LogonDataBean>=>LogonDataBean만 담아서 출력
+   
+   MemberDTO
+   ZipcodeDTO
+-------------------------------------------------------------------------------
+ ->1.각 테이블의 필드에 맞게 저장,불러오기 쉽게 하기위해서 만든 클래스
+    **2.메서드 호출=>매개변수의 자료형,반환형을 사용하기위해서 설계
+**********************************************************************************
+                                        MemberDTO
+      public void insertMember(LoginDataBean member)
+                                         ==========>DTO형
+             inbox=>8개           String id, String passwd,String name,,,,
+ 반환형 레코드 한개이상->
+
+//3.우편번호->우편번호 검색->자동으로 주소를 입력
+	//sql>select * from zipcode where area3 like '미아3동%';
+   public Vector<ZipcodeDTO> zipcodeRead(String area3){
+	   Vector<ZipcodeDTO> vecList=new Vector();//찾은 데이터를 담아야 되기때문에
+	   
+	   try {
+		   con=pool.getConnection();
+		   //sql="select * from zipcode where area3 like '미아3동%'";
+		   sql="select * from zipcode where area3 like  '"+area3+"%'";
+		   pstmt=con.prepareStatement(sql);
+		   rs=pstmt.executeQuery();
+		   //찾은 레코드가 한개 if(rs.next()), 한개이상->while(rs.next())
+		   while(rs.next()) {//찾은 레코드가 있어서 이동할 수 있다면
+			   //Vecotr or ZipcodeDTO에 담을 수도 있다.(rs.getXXX(필드명)
+			   ZipcodeDTO tempZipcode=new ZipcodeDTO();
+			   //필드별로 담고,필드별로 꺼내기가 쉽게 하기위해서
+			   tempZipcode.setZipcode(rs.getString("zipcode"));//("142-803")
+			   tempZipcode.setArea1(rs.getString("area1"));
+			   tempZipcode.setArea2(rs.getString("area2"));
+			   tempZipcode.setArea3(rs.getString("area3"));
+			   tempZipcode.setArea4(rs.getString("area4"));
+			   //벡터또는 ArrayList에 저장구문
+			   vecList.add(tempZipcode);
+		   }
+	   }catch(Exception e) {
+		   System.out.println("zipcodeRead() 실행오류=>"+e);
+	   }finally {
+		  pool.freeConnection(con, pstmt, rs); 
+	   }
+	   return vecList;//웹상에서 호출한 메서드에게 전달
+   }
+==========================================
+2.scripts.js
+
+//check=y->검색전의 창의 모습을 구분하는 인자(매개변수로 전달하기위해서 필요)
+function zipCheck(){
+	url="ZipCheck.jsp?check=y"
+	   //1.호출할 문서명 2.창의 제목 3.창의 옵션(width,height,left,top)
+	   //menubar(메뉴바),status(상태바),scrollbars(스크롤바),toolbar=yes|no
+	   window.open(url,"post","left=450,top=220,width=500,height=300,"+
+			                    "menubar=no,status=yes,toolbar=no,scrollbars=yes")
+}
+======================================================
+
+<a href="JavaScript:sendAddress('<%=tempZipcode%>',   
+                                                     '<%=tempArea1 %>',
+                                                     '<%=tempArea2 %>',
+                                                     '<%=tempArea3 %>',
+                                                     '<%=tempArea4 %>')">
+         <%=tempZipcode%>&nbsp;<%=tempArea1 %>&nbsp;<%=tempArea2 %>
+         &nbsp;<%=tempArea3 %>&nbsp;<%=tempArea4 %>                                          
+  </a><br>
+===================================================
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"
+    import="java.util.*,hewon.*" %>
+<!DOCTYPE html>
+<jsp:useBean id="memMgr"  class="hewon.MemberDAO" />
+<%
+  //script.js->ZipCheck()=>ZipCheck.jsp?check=y
+  request.setCharacterEncoding("utf-8");//한글처리해야 된다.
+  //-------------------------------------------
+  String check=request.getParameter("check");//y->우편번호를 눌렀을때 전달
+  String area3=request.getParameter("area3");//검색어를 입력->검색버튼을 눌렀을때 전달
+  System.out.println("check="+check+",area3=>"+area3);
+  //MemberDAO memMgr=new MemberDAO();
+  Vector<ZipcodeDTO> zipcodeList=memMgr.zipcodeRead(area3);
+  int totalList=zipcodeList.size();
+  System.out.println("검색된 총레코드수(totalList)=>"+totalList);
+%>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>우편번호 검색</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+<script>
+//동이름을 체크할 함수선언
+  function dongCheck(){
+	  if(document.zipForm.area3.value==""){
+		  alert("동이름을 먼저 입력하세요!");
+		  document.zipForm.area3.focus();
+		  return;
+	  }
+	  document.zipForm.submit();//document.폼객체명.submit() 전송한다. action지정값
+  }
+  //검색된 레코드중에서 내 주소와 가장 가까운 주소를 링크클릭할때 호출할 함수를 선언
+  //자바스크립트->부모창(opener)-->자식창(self.close())
+  //형식) opener.document.폼객체명.입력양식객체명.속성=값
+  function sendAddress(zipcode,area1,area2,area3,area4){
+	  var address=area1+" "+area2+" "+area3+" "+area4
+	  opener.document.regForm.mem_zipcode.value=zipcode;
+	  opener.document.regForm.mem_address.value=address;
+	  self.close();//self=>ZipCheck.jsp창(자식창)을 의미
+  }
+</script>
+</head>
+<body bgcolor="#FFFFCC">
+  <center>
+    <b>우편번호 찾기</b>
+    <table>
+  <!-- 검색어를 입력해서 자기자신의 페이지가 처리(다른 페이지로 전환X) -->
+   <form name="zipForm" method="post"  action="ZipCheck.jsp">
+        <tr>
+        <td><br>
+        동이름 입력:<input type="text" name="area3">
+        <input type="button" value="검색" onclick="dongCheck()">
+        </td>
+        </tr>    
+        <!-- post방식처럼 url값에 전송할 데이터값을 보여주지 않고 전송시키는 방법(입력X)
+               check=y(검색전) 검색버튼 클릭 ->check=n 변경 -->
+        <input type="hidden" name="check" value="n">
+   </form>
+   <%
+      //검색어를 입력하고 검색버튼을 눌렀다면
+       if(check.equals("n")){
+          if(zipcodeList.isEmpty()){ //검색된 레코드가 없다면
+           //if(zipcodeList.size()==0){
+   %>
+      <tr><td align="center">
+            <br>검색된 레코드가 없습니다.
+          </td>
+      </tr>
+    <%}else { %>
+   <tr><td align="center"><br>
+   *검색후 ,아래 우편번호를 클릭하면 자동으로
+     입력됩니다</td></tr>
+   <%
+       for(int i=0;i<totalList;i++){
+       ZipcodeDTO zipBean=zipcodeList.elementAt(i);//zipcodeList.get(i);
+       String tempZipcode=zipBean.getZipcode();//우편번호
+       String tempArea1=zipBean.getArea1().trim();//시==>"서울   "=>"서울"
+       String tempArea2=zipBean.getArea2().trim();//구
+       String tempArea3=zipBean.getArea3().trim();//동
+       String tempArea4=zipBean.getArea4().trim();//나머지
+   %>  
+     
+  <tr><td>
+    <a href="JavaScript:sendAddress('<%=tempZipcode%>',   
+                                                     '<%=tempArea1 %>',
+                                                     '<%=tempArea2 %>',
+                                                     '<%=tempArea3 %>',
+                                                     '<%=tempArea4 %>')">
+         <%=tempZipcode%>&nbsp;<%=tempArea1 %>&nbsp;<%=tempArea2 %>
+         &nbsp;<%=tempArea3 %>&nbsp;<%=tempArea4 %>                                          
+  </a><br>
+   <%
+              }//for
+          }//inner if
+       }//outer if
+   %>
+    </td></tr>
+    <tr><td align="center"><br>
+<a href="JavaScript:this.close()">닫기</a>                      
+    </table>
+  </center>
+</body>
+</html>
+===================================================
+ *** 웹프로그래밍 할때 오류가 발생이 될때 확인 ***
+
+NullPointerException =>객체를 생성하지 못하거나, 메서드호출 못할때 발생
+
+메서드 문제->** 1)SQL구문을 확인
+                  **
+
+                 con=pool.getConnection();
+                //sql="select * from zipcode where area3 like '미아3동%'";
+                 sql="select * from zipcode where area3 like  '"+area3+"%'";
+                 System.out.println("검색된 SQL구문(sql)=>"+sql);
+	    //pstmt=con.prepareStatement(sql); //pstmt객체를 얻어오지 못하는 경우
+	    rs=pstmt.executeQuery();
+
+  jsp문제==>String name= request.getParameter("매개변수")
+                 System.out.println("name=>"+name);//디버깅코드
+
+****************************************************************************************
+** MemberDAO에 소스추가
+
+//4.회원가입->오라클(실무)(트랜잭션처리) or MySQL(외부의 도메인 등록업체)(트랜잭션처리X)
+   //insert into member values(?,?,,,,)=>SQL의 성공유무=>반환값 1(성공) 0 (실패)
+   //메서드의 반환값X  매개변수 O
+	public boolean memberInsert(MemberDTO member) {//웹에서 이미 저장된 상태
+		boolean check=false;//회원가입 성공유무
+		
+		try {
+			con=pool.getConnection();
+			//-트랜잭션 시작처리->여러개의 SQL구문을 하나의 작업단위로 묶어주는것
+			con.setAutoCommit(false);//자동 commit을 하지 못하도록 설정
+			//SQL->insert와 update는 기본 데이터 저장 로직은 같다.(SQL구문만 다르다.)
+			sql="insert into member values(?,?,?,?,?,?,?,?)";
+			pstmt=con.prepareStatement(sql);//NullPointerException
+			pstmt.setString(1, member.getMem_id());
+			pstmt.setString(2, member.getMem_passwd());
+			pstmt.setString(3, member.getMem_name());
+			pstmt.setString(4, member.getMem_email());
+			pstmt.setString(5, member.getMem_phone());
+			pstmt.setString(6, member.getMem_zipcode());
+			pstmt.setString(7, member.getMem_address());
+			pstmt.setString(8, member.getMem_job());
+			int insert=pstmt.executeUpdate();//1(성공),0(실패)
+			System.out.println("insert(데이터 입력유무)=>"+insert);//1 or 0
+			con.commit();//실질적으로 테이블에 저장이 된다.
+			if(insert > 0) { //if(insert==1){
+				check=true;//데이터 성공확인
+			}
+		}catch(Exception e) {
+			System.out.println("memberInsert() 실행오류=>"+e);
+		}finally {
+			pool.freeConnection(con, pstmt);
+		}
+		return check;
+	}
+
+=======================================================
+ Register.jsp(회원가입창)=>RegisterProc.jsp(회원가입확인창)->MemberInsert.jsp
+                                                                                     memberInsert()호출
+========================================================
+<%
+    //Register.jsp->RegisterProc.jsp
+    request.setCharacterEncoding("utf-8");//한글처리
+    /* (1) 순수 자바코드로 구현한 경우
+    MemberDTO member=new MemberDTO();
+    member.setMem_id(request.getParameter("mem_id"));//("kkk");
+    member.setMem_passwd(request.getParameter("mem_passwd");
+    ,,,
+    */
+%>   
+<jsp:useBean id="member"  class="hewon.MemberDTO" />
+<jsp:setProperty name="member"  property="*" />
+         
+<html>
+========================================
+ MemberInsert.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"
+    import="hewon.*" %>
+ <%
+    //RegisterProc.jsp->MemberInsert.jsp
+    request.setCharacterEncoding("utf-8");//한글처리
+%>   
+<jsp:useBean id="member"  class="hewon.MemberDTO" />
+<jsp:setProperty name="member"  property="*" />  
+<%
+      //회원가입시켜주는 메서드를 호출
+      MemberDAO memMgr=new MemberDAO();
+      boolean check=memMgr.memberInsert(member);
+      System.out.println("MemberInsert.jsp의 check=>"+check);
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+<body bgcolor="#FFFFCC">
+<br>
+<center>
+	<%
+	    if(check){//회원가입에 성공했다면
+	    	out.println("<b>처음으로 회원가입을 축하드립니다.</b><p>");
+	        out.println("<a href=Login.jsp>로그인</a>");
+	    }else{
+	    	out.println("<b>다시 입력하여 주십시오</b><p>");
+	    	out.println("<a href=Register.jsp>다시 가입</a>");
+	    }
+	%>
+</center>
+</body>
+</html>
+====================================================
+
+
+
+
+
+
+

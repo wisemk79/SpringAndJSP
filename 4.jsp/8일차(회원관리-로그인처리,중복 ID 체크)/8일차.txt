@@ -1,0 +1,439 @@
+8일차(회원관리-로그인처리=>중복 ID 체크) =>모델1 프로그래밍 방식
+                     Flow-Chart
+
+=>사용자명 입력: scott/tiger
+==============================================
+1.DB설정 체크->DBConnectionMgr.java=>외부(2001)
+
+        책->JNDI->Mybatis
+
+프런트=>공통 모델1
+===============================
+jsp에서의 자바코드를 사용하지 않는다. =>가능한 적게 사용+디자인을 위주
+
+** 2.DB연동과 관련된 테이블에 따른 자바빈즈를 따로 작성한다.
+
+***  3.자바빈즈의 종류  ***
+
+  **1) DB연결빈->DB연결및 연결해제기능=>DBConnectionMgr.java(id,passwd,url 수정)
+
+  **2) 데이터저장빈->테이블에 데이터저장 =>테이블 설계 10개=>클래스가 10개
+                           및 조회기능(Setter,Getter) =>캡슐화가 적용된 클래스
+=================================================
+   **** 3) 비지니스 로직빈->웹상에서 메서드 호출
+
+  DBConnectionMgr.java
+
+ =>DB연결
+
+/*   MySQL
+	private String _driver = "com.mysql.jdbc.Driver",
+    _url = "jdbc:mysql://localhost:3306/mydb?useUnicode=true&characterEncoding=UTF-8",
+    _user = "root",
+    _password = "1234"; */
+
+    private String _driver = "oracle.jdbc.driver.OracleDriver",
+    _url = "jdbc:oracle:thin:@localhost:1521:orcl",
+    _user = "scott",
+    _password = "tiger";
+================================================
+  //DB연결 싱글톤 패턴
+    public static DBConnectionMgr getInstance() {
+        //만약에 객체가 생성이 된 상태가 아니라면
+		if (instance == null) {
+            synchronized (DBConnectionMgr.class) {
+                //동기화 처리
+				if (instance == null) {
+					//생성해서 반환해줘라
+                    instance = new DBConnectionMgr();
+                }
+            }
+        }
+        return instance;//반환값
+    }
+========================================
+커넥션풀
+======
+
+public synchronized Connection getConnection()
+            throws Exception {      ===========>메모리에 올려주고 Connection객체를
+                                                                 얻어오는 메서드
+        if (!initialized) {
+	//접속할 DB의 드라이버를 메모리에 로드
+            Class c = Class.forName(_driver);
+	//자동 등록(드라이버클래스)
+            DriverManager.registerDriver((Driver) c.newInstance());
+
+            initialized = true;//접속상태 
+        }
+
+//DB연결을 해제해주는 메서드=>MyBatis
+    public void freeConnection(Connection c, PreparedStatement p, ResultSet r) {
+        try {
+            if (r != null) r.close();
+            if (p != null) p.close();
+            freeConnection(c);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+==================================================
+=>회원로그인 시작->중복id 체크까지
+========================
+p416~430 읽어오기=>예습
+
+
+
+
+
+
+ =>회원로그인
+
+   모델1 방식 ->중소규모 사이트를 개발
+                                                                      ****************
+ =>오라클(회원관리), 게시판(MySQL->Oracle)-> 모델2 방식 게시판=>스프링(모델2)
+                                                                      ****************
+
+  프로그램 작성순서
+
+  주제->벤치마킹->쇼핑몰->15~20개 업무분석
+
+ 회원관리->회원가입,회원로그인,회원수정,회원검색,회원탈퇴,,,
+
+create table member(     
+ id varchar2(20) primary key, //회원계정 id->이메일->로그인
+ passwd varchar2(20) not null, //암호
+ name   varchar2(20) not null, //이름
+ e_mail varchar2(20) , //이메일은 선택
+ phone varchar2(30)  not null, //연락처(전화번호)
+ zipcode varchar2(10) , //우편번호 선택
+ address varchar2(60) not null, //배송지 주소
+ job  varchar2(30) //직업
+ );
+
+ insert into member values('nup','1234','홍길동',
+        'test@daum.net','02-123-0987','132-098',
+        '서울시 강남구 대현빌딩 3층','프로그래머');
+
+ commit;//메모리에 저장된 값을 테이블에 저장
+
+ *** 모델1의 장,단점 ***
+
+장점
+
+1. 적은규모(중소규모)의 사이트에 적합(4~5)
+2. 적은 인원으로 웹사이트 개발에 적합
+
+단점
+
+1.대규모의 (대기업규모) 사이트에 적합
+  하지 않는다.(10명 이상)
+2.페이지가 많아지면 유지보수가 어렵다
+
+********************************************
+***** 자바빈즈의 종류 *****
+
+  1) DB연결빈->DB연결및 연결해제기능=>따로 클래스로 뽑아내서 작업
+                       DBConnectionMgr.java를 사용
+
+   lib->ojdbc6.jar 복사(확인)
+*************************************************
+    //1.드라이버명 2.url(접속경로) 3.접속계정명 4.접속할 암호
+    private String _driver = "oracle.jdbc.driver.OracleDriver",
+    _url = "jdbc:oracle:thin:@localhost:1521:orcl",
+    _user = "scott",
+    _password = "tiger";
+************************************************
+ =>주제설정->2주동안 테이블 설계 자료=>10개~15개
+
+  2) 데이터저장빈->테이블에 데이터저장
+                          및 조회기능(Setter,Getter) ->테이블DTO(Data Transfer Object)
+      ->MemberDTO
+
+  회원테이블=>8개정도 필드
+
+SQL> create table member(
+  2   id varchar2(20) primary key,   //회원id ->중복허용X->e-mail
+  3   passwd varchar2(20) not null, ->암호 필수 입력
+  4   name   varchar2(20) not null, ->회원명
+  5   e_mail varchar2(20) , ---->이메일이 없을수도 있기때문에 
+  6   phone varchar2(30)  not null,->연락처(필수)
+  7   zipcode varchar2(10) ,->우편번호
+  8   address varchar2(60) not null,=>주소(배송지)
+  9   job  varchar2(30)->직업
+ 10   );
+        테이블의 필드도 3개->한개 정해줘야 된다.
+==>____010__-__1234________-___5678________
+
+테이블이 생성되었습니다.
+
+SQL>
+SQL>  insert into member values('nup','1234','홍길동', =>nup,1234
+  2          'test@daum.net','02-123-0987','132-098',
+  3          '서울시 강남구 대현빌딩 3층','프로그래머');
+
+1 개의 행이 만들어졌습니다.
+
+SQL>
+SQL>  commit; //=>테이블에 반영(트랜잭션 처리때문에)
+
+커밋이 완료되었습니다.
+
+SQL> select * from member;
+
+ID                   PASSWD               NAME
+-------------------- -------------------- --------------------
+E_MAIL               PHONE                          ZIPCODE
+-------------------- ------------------------------ ----------
+ADDRESS
+------------------------------------------------------------
+JOB
+------------------------------
+nup                  1234                 홍길동
+test@daum.net        02-123-0987                    132-098
+서울시 강남구 대현빌딩 3층
+프로그래머
+
+
+SQL>
+=========================================
+
+  public class MemberDTO {
+
+	// 멤버변수->웹상에서 입력받는 input box의 갯수와 보통같다.(필드수와 거의 같다)
+	// 멤버변수명은 필드명과 같아도되고 같지 않아도 된다.
+	// 회원가입폼의 input type="text" name=" "와는 반드시 같아야 된다.(액션태그때문에)
+
+	private String mem_id;
+	private String mem_passwd;
+	private String mem_name; // 이름
+	private String mem_email;// 메일
+	private String mem_phone;// 전번
+	private String mem_zipcode;// 우편번호
+	private String mem_address;// 주소
+	private String mem_job;// 직업
+               ,,,,
+
+  **3) 비지니스로직빈->웹상에서 메서드선언 호출->DAO(Data Access Object)
+                                                                       테이블명DAO
+                               ->DB연동을 할 수 있도록 설계된 클래스
+      ->MemberDAO
+
+SQL> select id,passwd from member where id='nup' and passwd='1234';
+
+ID                   PASSWD
+-------------------- --------------------
+nup                  1234 ===========>반환값 int->1(존재있다.) 0 (없다.)
+                                                                boolean true or false(메모리 적게 사용)
+ MemberDAO
+
+//3.업무에 요구분석->어떠한 기능이 필요
+	//1)회원 로그인 기능
+	//형식) public 반환형 메서드명(입력받은 갯수만큼 매개변수부여){ SQL작성 }
+	//select id,passwd from member where id='nup' and passwd='1234';
+	public boolean loginCheck(String id,String passwd) {
+		//1.DB연결
+		boolean check=false;
+		//2.실행시킬 SQL구문 처리
+		try {
+			con=pool.getConnection();
+			System.out.println("con=>"+con);
+			sql="select id,passwd from member where id=? and passwd=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, id);//1.?의 순서 2.저장할값(=매개변수)
+			pstmt.setString(2, passwd);
+			rs=pstmt.executeQuery();
+			check=rs.next();//데이터가 존재->true,없으면 false
+		}catch(Exception e) {
+			System.out.println("loginCheck()실행 에러유발=>"+e);
+		}finally {//3.DB연결해제
+			pool.freeConnection(con, pstmt, rs);
+		}
+		
+		return check;
+	}
+	
+*********************************************************************************
+LoginProc.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"
+    import="hewon.MemberDAO" %>
+    
+<jsp:useBean id="memMgr"  class="hewon.MemberDAO" scope="page" />
+<%
+    //id는 영어->한글처리할 필요X ->request.setCharacterEncoding("utf-8")(X)
+    String mem_id=request.getParameter("mem_id");
+    String mem_passwd=request.getParameter("mem_passwd");
+    System.out.println("mem_id=>"+mem_id+",mem_passwd=>"+mem_passwd);
+    //MemberDAO객체 필요->loginCheck메서드호출
+    //MemberDAO memMgr=new MemberDAO();
+    boolean check=memMgr.loginCheck(mem_id, mem_passwd);
+%>
+<%
+   //check->LoginSuccess.jsp(인증화면),LogError.jsp(에러메세지)
+   if(check){//if(check==true)
+	   session.setAttribute("idKey",mem_id);//메모리에 저장->request.getAttribute(키명)
+	   response.sendRedirect("LogSuccess.jsp");//인증화면으로 이동
+   }else{//id가 없다는경우,passwd X
+	   response.sendRedirect("LogError.jsp");//단순히 이동하고자할때 
+   }
+%>
+================================================
+LoginSuccess.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+    //파일로 만들어서 불러오기->include 지시어를 이용할것.
+   //웹상에서 강제로 접근->인증처리=> session.setAttribute("idKey",mem_id);
+   String mem_id=(String)session.getAttribute("idKey");
+   System.out.println("mem_id=>"+mem_id);//계정명->null
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>인증성공 페이지</title>
+</head>
+<body>
+<%
+   //Login.jsp->LoginProc.jsp->LoginSuccess.jsp
+   if(mem_id!=null){ //인증된 사람이라면
+%>
+<b><%=mem_id %></b>님 환영합니다.<p>
+  당신은 제한된 기능을 사용할 수 가 있습니다.<p>
+  <a href="Logout.jsp">로그아웃</a>
+ <%} %>
+</body>
+</html>
+================================================
+LogOut.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+   //세션 연결상태->바로 연결종료->메모리상에서 계정정보삭제
+   session.invalidate();
+%>
+<script>
+   alert("정상적으로 로그아웃 되었습니다.")
+   location.href="Login.jsp" //location.href="경로포함해서 이동할 페이지명"
+</script>
+-----------------------------------------------------------------------------
+ **중복 id를 체크하기 **=>jQuery의 Ajax를 이용
+
+1.웹상에서 입력->처리->중복 id있는지 체크해주는 메서드->MemberDAO 작성
+
+public boolean checkId(String id) {
+		//DB연결
+		boolean check=false;
+		//SQL구문
+		try {
+			con=pool.getConnection();
+			sql="select id from member where id=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs=pstmt.executeQuery();
+			check=rs.next();//데이터 존재 true or 없으면 =>false
+		}catch(Exception e) {
+			System.out.println("checkId()에러유발=>"+e);
+		}finally {//DB메모리 해제
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return check;
+	}
+
+2.IdCheck.jsp를 작성->중복 체크id값을 전달해주는 자바스크립트 함수필요
+
+<input type="text" name="mem_id" size="15">
+		      <input type="button" value="ID중복확인" 
+                         onClick="idCheck(this.form.mem_id.value)">
+                                     ==========>자바스크립트 함수호출
+
+scritpt.js 에 함수를 선언
+
+//중복ID체크 해주는 자바스크립트함수 선언
+function idCheck(id){
+   if(id==""){
+	   alert("아이디를 먼저 입력하세요!")
+	   document.regForm.mem_id.focus()//document.폼객체명.입력양식.호출할 함수
+   }else{//id를 입력하고 누른경우
+	   //입력받은 중복id를 jsp로 전달->매개변수로 전달
+	   url="IdCheck.jsp?mem_id="+id
+	   //1.호출할 문서명 2.창의 제목 3.창의 옵션(width,height,left,top)
+	   window.open(url,"post","left=450,top=150,width=300,height=150")
+   }
+}
+
+3.IdCheck.jsp를 작성=>결과를 볼 수 있다.
+
+================================================
+
+ 우편번호 테이블 작성하기->오라클 또는 MySQL 공통으로 사용
+
+CREATE TABLE zipcode (
+	zipcode             char(7)              NOT NULL  ,
+	area1               char(10)             NULL      ,
+	area2               char(20)             NULL      ,
+	area3               char(40)             NULL      ,
+	area4               char(20)             NULL      
+);
+
+오라클의 sql파일 불러오기
+zipcode.txt =>c:\webtest에 복사
+
+sql>@c:\webtest\zipcode.txt =>@경로명 및 불러올 파일명
+
+1 개의 행이 만들어졌습니다.
+
+1 개의 행이 만들어졌습니다
+
+sql>commit;==>실제 메모리상에 저장된 데이터값이 테이블에 영구저장
+
+sql>select count(*) from zipcode; //총레코드수를 확인할때 사용
+
+ COUNT(*)
+----------
+     42619
+
+==>zipcode테이블을 생성->데이터를 입력=>DTO는 테이블갯수만큼 작성
+
+DAO=>테이블 갯수X=>MemberDAO=>회원테이블, 우편번호 테이블=>검색
+                                                                  메서드 한개를 위해 클래스
+
+  ZipcodeDTO 생성 =>같은 기능을 가진 클래스는 같은 패키지에 저장
+===================================================
+
+//우편번호테이블->웹상에서 검색을 할때 검색된 데이터를 필드별로 
+//                      가져오기위해서 필요로하는 데이터 저장빈
+
+public class ZipcodeDTO {
+
+	private String zipcode;//우편번호
+	private String area1;//시,도
+	private String area2;//구,소도시
+	private String area3;//동,면,리->실시간으로 입력
+	private String area4;//나머지 주소
+	,,,,
+=========================================
+예습)-> 우편번호 검색->메서드 필요->MemberDAO
+
+            zipcode.jsp=>검색
+===================================
+           회원가입=>자바빈즈 정리
+             트랜잭션 처리 p369~371
+           p416
+
+ p424->27~33=>박스->JNDI
+                      Java Naming Directory Interface
+                     =>특정한 이름으로 찾아서 DB연결하는 방법
+                         lookup("jdbc/jsptest")
+                                   =========>스프링에서 해줄예정
+===================================
+         회원수정,회원탈퇴=>로그인
+
+
+
+
+

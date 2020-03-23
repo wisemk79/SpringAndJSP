@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item key="J2EE_EXPORT_OVERWRITE" value="true"/>
+	<item key="J2EE_EXPORT_SOURCE" value="true"/>
+	<list key="MRU_RUNTIME_STORE">
+		<item value="Apache Tomcat v8.5"/>
+	</list>
+	<list key="J2EE_EXPORT_JST_WEB">
+		<item value="C:\webtest\4.jsp\18일차(모델2로 작성한 게시판의 조회하기)\모델2로 게시판까지 구현(글검색까지)\JspBoard2.war"/>
+		<item value="C:\webtest\4.jsp\17일차(모델2로 작성한 게시판-글쓰기,글상세보기,글수정하기,글삭제)\4.모델2로 구성된 게시판의 글삭제까지 구현\JspBoard2.war"/>
+		<item value="C:\webtest\4.jsp\17일차(모델2로 작성한 게시판-글쓰기,글상세보기,글수정하기,글삭제)\3.모델2로 구성된 게시판의 글수정까지 구현\JspBoard2.war"/>
+		<item value="C:\webtest\4.jsp\17일차(모델2로 작성한 게시판-글쓰기,글상세보기,글수정하기,글삭제)\2.모델2로 구성한 답변글및 글상세보기까지 구현\JspBoard2.war"/>
+		<item value="C:\webtest\4.jsp\17일차(모델2로 작성한 게시판-글쓰기,글상세보기,글수정하기,글삭제)\1.모델2로 구현한 게시판의 글쓰기 구현\JspBoard2.war"/>
+		<item value="C:\webtest\4.jsp\16일차(모델2로 구성한 게시판-글목록보기구현)\2.모델2로 구현한 게시판의 글목록보기까지 구현\JspBoard2.war"/>
+	</list>
+	<list key="J2EE_IMPORT_null">
+		<item value="C:\webtest\4.jsp\14일차(모델1의 게시판-글 삭제하기 Review,el,jstl문법 사용방법)\1.게시판의 글삭제까지 구현(모델1까지의 최종소스코드)\JspBoard.war"/>
+		<item value="C:\webtest\4.jsp\2 일차(JSP 사용법(구성요소))\jsp4대구성요소에 대한 예제\JspStudy.war"/>
+	</list>
+</section>

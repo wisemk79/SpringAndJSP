@@ -1,0 +1,9 @@
+2일차(Ajax Programming의 개요 및 작성법)
+
+JSP책 7장 Ajax 개요(p223)그림 O->사용X->JQuery
+           =>실무예제 ->Ajax 사용O =>JQuery->p161~
+
+ 오후 4:10 JSP 중간점검 시험 O (25문제)
+
+(jsp 1일차->이번주 까지 시험범위)->jsp,git,ajax,jQuery 일부
+=========================================

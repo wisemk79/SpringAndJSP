@@ -1,0 +1,331 @@
+14일차(게시판의 글 삭제하기 Review, el,jstl 개요 및 사용방법)
+
+=>내일 금요일 팀별 회의(진행상황)=>3:00~3:30 시작
+=>주제파악->진행
+=>매주 화요일,목요일(팀별 진행 체크)->금요일 발표
+==============================
+=>중간 점검 쪽지시험->객관식,재시험X->공지
+==============================
+ 모델1 웹프로그래밍 방식 
+
+ 모델2->서블릿=>** 스프링(모델2을 기반) **
+--------------------------------------
+14장. 표현언어(p576~)  ->태그형식 작업->암기과목
+    <%=변수%>==>${변수명} ${수식} ${객체명.멤버변수}1
+
+15장. JSTL(액션태그2)=>모델2하면서 액션태그로 작업(모델1)
+===============  모델2를 구조
+
+** EL과 JSTL **
+
+  Jstltest->웹 프로젝트 생성
+=>setTag.jsp
+
+ 웹프로그래밍의 기본=>모델1(개인,중소규모),모델2(대규모 포탈사이트,대기업)
+                                                                         스프링
+=>액션태그
+el,jstl 문법=>기본적으로 제공된 액션태그(include,forward,useBean,
+                                                           setProperty,getProperty) 5개
+                    액션태그 2                                    내장
+
+el(Expression Language)->변수의 값을 출력,객체의 멤버변수의 값출력
+    표현언어->출력문(변수의 값,수식계산,객체의속성값 출력)
+
+형식) ${표현식}  =>out.println(변수명); out.println(str);
+                             <%=str %> =>${변수명}
+
+   ex) <%=article.getNum()%>=>${article.num} ->${객체명.멤버변수명}
+                                            ${article['num']} (X)
+                                           ${article["num"]} (X) =>불편하기때문에 
+                                                                         잘 사용하지 않음
+
+           out.println(4+5); <%=4+5%>  ${4+5} ,${20} =>값을 저장시킬때도
+                                                                        이 형식을 사용한다.
+
+  page----------->pageScope
+  request
+  session
+  application
+
+  http://jakarta.apache.org
+--------------------------------------------------------------------
+ jstl(Jsp Standard Tag Library)=>액션태그를 사용할 수있도록 해주는 
+                                           라이브러리 형태로 제공된 자바 패키지
+
+  jstl.jar, standard.jar->웹상에서 다운로드 받음(압축풀기)
+ 
+**
+C:\Tomcat 8.5\lib ->복사 ->모든 프로젝트에서 불러다 사용(전역)
+
+ **특정 프로젝트에서만 사용-> WEB-INF
+                                             |
+                                              -lib에 복사(개별)=>복사
+
+***core=>변수선언,객체의 값을 불러오기,제어문,,, p596~
+   fmt->날짜,시간,통화 부분
+====
+ sql->DB연동->태그로 만들어서 불러옴(X)
+ xml->환경설정
+ fn
+======================================
+ setTag.jsp
+
+<%@taglib prefix="식별자(액션태그의 종류)"  uri="액션태그의 선언문(core)" %>
+                                                                         별칭
+
+<%
+    //int num1=20;
+    //double num2=10.5;
+    //java.util.Date today=new java.util.Date();
+%>
+<!--
+   set액션태그-> var="변수명" value="저장할 값 자료형은 저장되는 값에 따라서 자동으로 부여"
+                      scope="변수의 사용범위 지정(page(default),request,session,application"
+  -->
+<c:set var="num1"  value="${20}"  scope="page" />
+<c:set var="num2">
+    10.5
+</c:set>
+<c:set var="today"  value="<%=new java.util.Date() %>" />
+<hr>
+변수 num1=${num1}<br>
+변수 num2=${num2}<br>
+num1+num2=${num1+num2}<br>
+오늘은 ${today} 입니다.<p>
+
+<!-- remove var="내용을 삭제시킬 변수명" scope="변수의 사용범위"  -->
+<c:remove var="num1" scope="page" />
+삭제한 후의 num1변수 num1=${num1}<br>
+num1+num2=${num1+num2}
+</body>
+</html>
+
+=>setTag2.jsp
+
+org.apache.jasper.JasperException: 
+javax.servlet.ServletException: javax.servlet.jsp.JspTagException: Invalid property in &lt;set&gt;:  "name"
+
+.JspTagException=>액션태그를 잘 못사용한 경우에 발생되는 예외처리클래스
+
+
+***********************************************************************************
+<%=request.getParameter("name") %><p>
+ 이름은(el) ${param.name}
+                   ====
+             el언어에의 내장객체=>매개변수를 받을때 관여하는 내장객체(request대용)
+                                                                                  jsp
+
+                                                             jsp내장객체
+
+<%=request.getParameter("addr") %><p>
+${param.addr}  ==>angular {{속성명}}
+
+**** param=> el의 내장객체 =>형식) ${param.매개변수명}
+***********************************************************************
+
+jstl태그중에서는 기존의 다른 태그에서 만들어진 객체를 다른 액션태그에서
+불러올때 (참조할때)  target="${객체명}"  =>객체로 인식
+
+ ->setTag2.jsp 예제
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<!DOCTYPE html>
+
+<%
+     // java.util.HashMap map=new java.util.HashMap();//세션처리와 연관,메모리에 저장
+      //map.put("name","홍길동");//map.get(키명(name))
+       //request.setCharacterEncoding("utf-8");//p613
+       //requestEncoding(액션태그명)  value="캐릭터셋"
+%>
+<fmt:requestEncoding value="utf-8" />
+
+<c:set var="map" value="<%=new java.util.HashMap() %>" />
+<html>
+<head>
+<meta charset="UTF-8">
+<title>set태그의 2번째 예제</title>
+</head>
+<body>
+<%--
+    액션태그의 주석달때 사용
+     target(${객체명}(어떤 객체에 저장할것인지),=>외부에서 만들어진 객체를 불러올때 사용
+     property(속성명(멤머변수))를 지정,value =>객체의 값을 저장할때 필요로하는 속성
+     ->jsp:setProperty  name="객체명" property="속성명(=멤버변수)" value="값"/>
+     map.put("name","홍길동");//map.get(키명(name))
+ --%>
+ <c:set target="${map}" property="name"  value="홍길동" />
+  변수 map에 저장된 name값:${map.name}<br>
+  변수 map에 저장된 name값:${map['name']}<br>
+  변수 map에 저장된 name값:${map["name"]}<br>
+  
+ <form method="post" action="setTag2.jsp">
+   이름:<input type="text" name="name">
+   <input type="submit" value="전송">
+ </form>
+ <hr>
+이름은 <%=request.getParameter("name") %> 입니다.<p>
+이름은(el) ${param.name} 입니다.
+</body>
+</html>
+==========================================
+ ifTag.jsp->save as chooseTag.jsp
+
+
+ <c:choose>====================>if(조건식)
+     <c:when test=""></c:when>                     참 실행
+     <c:otherwise></c:otherwise>              else
+ </c:choose>                                             거짓 실행
+---------------------------------------------------------------
+http://localhost:8080/JstlTest/chooseTag.jsp?name2=bk
+http://localhost:8080/JstlTest/chooseTag.jsp?age2=20
+http://localhost:8080/JstlTest/chooseTag.jsp==========>default
+
+                          *** ${param.매개변수}=>request.getParameter("매개변수")**
+---------------------------------------------------------------------------------------
+ jstlcore.jsp 정리=>** Template를 작성하는 방법 **
+
+<h3>출력문</h3>
+   <h1>
+   -----------------jsp에서 출력할 구문 4가지 ----------------
+   <%--
+       <c:out value="출력할대상자(el과 같이 사용)" />
+    --%>
+   ${1+2} <c:out value="${1+2}" /><p>
+   <%
+       out.println(1+2);
+   %>
+   <%=1+2 %>
+  --------------------------------------------------------------
+   <hr>
+   ${1 > 3 } <c:out value="${1 > 3}" />
+   ${1 gt 3 } <c:out value="${1 gt 3}" />
+   <hr>
+   형식:session.setAttribute("key",value);<p>
+   <%
+       String name="hello";
+       //session.setAttribute("name","하늘");
+       //String name="하늘" ->session.setAttribute("name","하늘")
+       // request.setAttribute("name","하늘"); =>scope="request"
+ *************************************************************
+   //scope="page | request | sesssion | application"	(저장영역지정시)
+   // pageScope requestScope sesssionScope applicationScope ->p922 (출력할때 영역설정)
+ ***************************************************************  
+ %>
+   <c:set var="name" value="하늘"  scope="session"/>
+   expression name:<%=session.getAttribute("name") %><p>
+   
+   set page scope var "name":
+   <c:set var="name"  value="hello" />
+   <!-- 같은 변수의 값을 출력 저장영역을 표시.출력할 변수명 -->
+   c:out name:<c:out value="${name}" /><br>
+   c:out name:<c:out value="${pageScope.name}" /><br>
+   session의 값 name:<c:out value="${sessionScope.name}" /><br>
+   <hr>
+   remove session scope var "name":<c:remove var="name" scope="session"/><p>
+   session의 값 name2:<c:out value="${sessionScope.name}" /><br>
+   </h1>
+-------------------------------------------------------------------------------------
+제어문 ->if,for,if~else if(=switch ~case)
+=========================
+ifTag.jsp를 save as chooseTag.jsp
+
+-------------------------------------
+if (조건식)
+  실행구문
+else
+  실행구문2
+------------------------------------
+
+다중 if =>p940==>switch ~case <c:choose>이용
+
+ifTag.jsp->save as  chooseTag.jsp
+
+ if(조건식) 
+ 
+ else if (조건식2) -><c:when>
+
+ else if (조건식3)
+,,,
+
+ else ===><c:otherwise>
+===========================
+<c:choose>
+   <c:when test="조건식">
+        ===>if액션태그 대신에 when 액션태그를 사용하는것이
+   </c:when>       다르다.
+</c:choose>
+
+
+  request.getParameter("name2")==>bk
+
+  ${param.name2}=='bk'
+
+  request.getParameter("age2")==18
+
+ url창에 직접 입력=>수동으로 입력
+http://localhost:8090/jstltest/chooseTag.jsp?name2=bk
+http://localhost:8090/jstltest/chooseTag.jsp?age2=20
+
+==================================
+param.jsp=>파라미터값을 전달하는 것과 연관이 있는 액션태그가 있다.
+
+            <jsp:forward>=>페이지 이동시키면서 매개변수를 전달하는 경우
+                <jsp:param name="매개변수명" value="전달할값" />
+            </jsp:forward>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>     
+<%
+     //response.sendRedirect("http://www.naver.com");//외부사이트로 이동
+     //response.sendRedirect("chooseTag.jsp?name2=bk");//특정 jsp로 이동
+%>
+<%-- p921~940
+        <c:redirect url="이동할 페이지명" /> 매개변수 없이 이동만 하는 경우(공유X)
+        <c:redirect url="이동할 페이지명" >
+              <c:param name="전달할매개변수명" value="전달할값" />
+              ,,,
+        </c:redirect>
+ --%>
+<c:redirect url="chooseTag.jsp">
+    <c:param name="name2" value="bk" />
+</c:redirect>
+-------------------------------------------------------------------------
+forEach.jsp=>반복문(for문)
+
+<%
+     java.util.HashMap mapData=new java.util.HashMap();
+     mapData.put("name","홍길동");
+     mapData.put("today",new java.util.Date());//날짜객체 저장
+     //int []intArray={1,2,3,4,5};//배열도 객체다
+%>
+<c:set var="intArray"  value="<%=new int[] {1,2,3,4,5} %>" />
+<c:set var="map" value="<%=mapData %>" />
+<html>
+<head>
+<meta charset="UTF-8">
+<title>forEach태그 연습</title>
+</head>
+<body>
+<%
+   int sum=0;
+   for(int i=1;i<=100;i++){//i+=2
+	   if(i%2==1)
+	      sum+=i;//sum=sum+i;
+   }
+  out.println(sum);
+%>
+<h4>1~100까지의 홀수의 합</h4>
+<!-- 
+   forEach-> var="첨자의 변수명" begin="첨자변수의 시작값" end="첨자변수의 종료값"
+                                             step="증가값" (1인경우에는 step값을 생략이 가능하다.)
+ -->
+<c:set var="sum" value="0" />
+<c:forEach var="i"  begin="1" end="100" step="2">
+	<c:set var="sum" value="${sum+i}" />
+</c:forEach>
+결과:${sum}
+</body>
+</html>
+
+ p686~692 페이지 읽어오기(모델2)

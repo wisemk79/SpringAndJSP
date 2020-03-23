@@ -1,0 +1,6 @@
+BranchProjectTracker__C\:\\Users\\KITCOOP\\git\\JspStudy\\.git_hotfix=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<projects>\r\n<project>\\JspStudy</project>\r\n</projects>
+BranchProjectTracker__C\:\\Users\\KITCOOP\\git\\JspStudy\\.git_master=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<projects>\r\n<project>\\JspStudy</project>\r\n</projects>
+commit_dialog_history_messages=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<messages>\r\n<message>Merge remote-tracking branch &apos;origin/master&apos; fixed&\#x0A;&\#x0A;Conflicts\:&\#x0A;&\#x09;JspStudy/WebContent/imsi.jsp&\#x0A;</message>\r\n<message>imsi.jsp modified on Local Repository</message>\r\n<message>Push brance &apos;Master&apos;</message>\r\n<message>Merge branch &apos;hotfix&apos; fixed&\#x0A;&\#x0A;Conflicts\:&\#x0A;&\#x09;JspStudy/WebContent/abc/test.jsp&\#x0A;</message>\r\n<message>hotfix add test.jsp source code</message>\r\n<message>master branch change a code</message>\r\n<message>test.jsp success modified</message>\r\n<message>create project&\#x0A;create name print</message>\r\n</messages>
+eclipse.preferences.version=1
+resourcehistory_graph_split=269,723
+resourcehistory_rev_split=700,300

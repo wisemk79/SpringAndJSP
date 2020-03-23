@@ -1,0 +1,16 @@
+
+select count(*) from board;
+-- select * from board order by ref desc,re_step asc limit ?,?
+
+CREATE TABLE zipcode (
+  zipcode char(7) NOT NULL,
+  area1 char(10) DEFAULT NULL,
+  area2 char(20) DEFAULT NULL,
+  area3 char(40) DEFAULT NULL,
+  area4 char(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+select * from board order by ref desc,re_step asc limit ?,?";
+
+
+
