@@ -88,7 +88,7 @@ Step 3 : 웹 서버의 응답을 화면에 반영하기->페이지 이동없이
 
 5.domajax2.html=>Ajax의 전체 요청 및 흐름를 이해
 
-//1)xhr 객체를 얻어오는 함수 필요
+//1)xhr객체를 얻어오는 함수 필요
  var httpRequest=null;//xhr객체를 저장할 변수(전역변수의 성역)->p150 함수부분
  
 function getXHR(){

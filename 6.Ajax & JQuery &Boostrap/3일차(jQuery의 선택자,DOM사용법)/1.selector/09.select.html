@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" 
+           src="http://code.jquery.com/jquery-3.3.1.min.js" ></script>
+<title>폼입력양식2(필터속성선택자2)</title>
+<script>
+  $(function(){ 
+	  /*
+	    요소:selected=>select태그의 options객체중에서 선택된 태그를 가리킬때 사용->필터속성선택자
+	    자바->쓰레드를 사용,자바스크립트,jQuery=>setTimeout,setInterval
+	     1.setTimeout(호출할 함수명 | 익명함수,초단위(1000))->1초에 한번만 실행
+	     2.setInterval(호출할 함수명 | 익명함수,초단위(1000))->1초에 계속 반복해서 실행
+	    */
+	    setInterval(function(){//setTimeout(function(){  한번만 실행
+	    	var value=$('select > option:selected').val()
+	    	alert(value)
+	    },5000) //5초뒤에 선택한 항목을 화면에 출력
+   })      
+   
+</script>
+</head>
+<body>
+   <h1>jQuery 예제</h1>
+   <select>
+      <option>화면구현</option>
+      <option>오라클</option>
+      <option>자바</option>
+      <option>JSP</option>
+      <option>Ajax & JQuery</option>
+   </select>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

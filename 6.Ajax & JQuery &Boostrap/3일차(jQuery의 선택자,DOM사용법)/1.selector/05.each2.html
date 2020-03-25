@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" 
+           src="http://code.jquery.com/jquery-3.3.1.min.js" ></script>
+<title>jquery(05.each2.html)</title>
+<script>
+  $(function(){ 
+	  //중첩된 태그의 정보를 어떻게 얻어오고 내용을 검색,스타일을 적용?
+	  var $nodes=$('#root').children().css('color','red')
+	  alert('자식들의 수=>'+$nodes.length)
+	  var txt="";//자식들의 이름을 저장할 변수
+	  //형식)$(반복적으로 실행시킬 태그명).each(호출할 함수명 | 익명함수)
+	  /*
+	   1.text()=>태그내부의 텍스트(문자열만) 가져오는 함수<->text(매개변수(저장할값(문자열)))
+	   2.html()=>태그와 텍스트들까지 같이 가져오는 함수<->html(매개변수)->Setter Method
+	   3.val()=>form태그 안에 입력양식에 해당되는 값을 가져올때 사용(input)<->val(매개변수값)
+	  */
+	  $('#root').children().each(function(){ //jquery함수->매개변수가 익명함수형태로 작성
+		  txt+=$(this).text()+" ";
+	  })
+	  alert(txt);
+   })                                                          
+</script>
+</head>
+<body>
+   <h1>jQuery 예제(중첩)</h1>
+   <div id="root"><!-- 부모 자식관계(중첩된 상태)  -->
+       <div><b>홍길동</b></div>
+       <div>테스트김</div>
+       <div><i>임시</i></div>
+       <div>임시테스트</div>
+   </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
