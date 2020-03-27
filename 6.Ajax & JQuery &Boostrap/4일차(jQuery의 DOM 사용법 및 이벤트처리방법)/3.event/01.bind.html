@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" 
+           src="http://code.jquery.com/jquery-3.3.1.min.js" ></script>
+<title>jquery실습</title>
+<script>
+  $(function(){ 
+	  /*
+	    1) window.on이벤트종류명=호출할 함수명 or 익명함수
+	    2) window.addEventListener(이벤트종류명,실행할 함수명)
+	    3) $('이벤트발생 대상선택자').bind(등록할 이벤트종류명,실행시킬 함수명)
+	       내장객체=>event=>망수의 클릭상태,좌표값(x,y) 정보=>매개변수로 전달받을 수 있다.
+	       1) 함수내용 끝에 return false 코딩->기본기능 중지
+	       2) event객체를 매개변수로 전달받아서 event.preventDefault()를 호출함으로써 중지
+	  */
+	  /* (1)
+	    $('a').bind('click',function(){
+	    	alert('이벤트 연습중')
+	    	return false
+	    })
+	   */
+	   $('a').bind('click',function(event){
+	    	//alert('이벤트 연습중')
+	    	//$(this)->같은 태그를 구분하는 키워드로 사용(이벤트처리 대상자),이벤트를 발생시킨태그
+	    	/*
+	    	var href=$(this).attr('href')//<->$(this).attr('href',값)
+	    	$('img').attr('src',href) //이미지태그의 src속성에 클릭한 이미지 경로를 넣어주면
+	    	*/
+	    	$('img').attr('src',$(this).attr('href'))
+	    	event.preventDefault() //기본기능을 중지시켜주는 함수호출
+	    })
+   })                                 
+   
+</script>
+</head>
+<body>
+   <ul><!-- 링크걸기(기본기능(페이지 이동기능)) -->
+     <li><a href="../picCats/Persian.jpg">Persian</a></li>
+     <li><a href="../picCats/RussianBlue.jpg">RussianBlue</a></li>
+     <li><a href="../picCats/BritishShorthairs.jpg">BritishShorthairs</a></li>
+   </ul>
+   
+  <!--  <img src="../picCats/Persian.jpg"> -->
+  <img>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

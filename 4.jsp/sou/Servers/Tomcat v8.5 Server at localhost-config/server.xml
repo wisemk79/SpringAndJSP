@@ -17,13 +17,13 @@
 --><!-- Note:  A "Server" is not itself a "Container", so you may not
      define subcomponents such as "Valves" at this level.
      Documentation at /docs/config/server.html
- --><Server port="8090" shutdown="SHUTDOWN">
+ --><Server port="8005" shutdown="SHUTDOWN">
   <Listener className="org.apache.catalina.startup.VersionLoggerListener"/>
   <!-- Security listener. Documentation at /docs/config/listeners.html
   <Listener className="org.apache.catalina.security.SecurityListener" />
   -->
   <!--APR library loader. Documentation at /docs/apr.html -->
-  <Listener SSLEngine="on" className="org.apache.catalina.core.AprLifecycleListener"/>
+ <!-- <Listener SSLEngine="on" className="org.apache.catalina.core.AprLifecycleListener"/> --> 
   <!-- Prevent memory leaks due to use of particular java/javax APIs-->
   <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener"/>
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener"/>
@@ -60,7 +60,7 @@
          APR (HTTP/AJP) Connector: /docs/apr.html
          Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
     -->
-    <Connector connectionTimeout="20000" port="8080" protocol="HTTP/1.1" redirectPort="8443"/>
+    <Connector connectionTimeout="20000" port="8181" protocol="HTTP/1.1" redirectPort="8443"/>
     <!-- A "Connector" using the shared thread pool-->
     <!--
     <Connector executor="tomcatThreadPool"
@@ -105,12 +105,8 @@
     -->
 
     <!-- Define an AJP 1.3 Connector on port 8009 -->
-    <!--
-    <Connector protocol="AJP/1.3"
-               address="::1"
-               port="8009"
-               redirectPort="8443" />
-    -->
+    <Connector port="8009" protocol="AJP/1.3" redirectPort="8443"/>
+
 
     <!-- An Engine represents the entry point (within Catalina) that processes
          every request.  The Engine implementation for Tomcat stand alone
@@ -153,7 +149,7 @@
              Note: The pattern used is equivalent to using pattern="common" -->
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" pattern="%h %l %u %t &quot;%r&quot; %s %b" prefix="localhost_access_log" suffix=".txt"/>
 
-      <Context docBase="AjaxTest" path="/AjaxTest" reloadable="true" source="org.eclipse.jst.jee.server:AjaxTest"/></Host>
+      <Context docBase="9.ConnectionPool_preparedStmt" path="/9.ConnectionPool_preparedStmt" reloadable="true" source="org.eclipse.jst.jee.server:9.ConnectionPool_preparedStmt"/><Context docBase="10.ConnectionPool_final" path="/10.ConnectionPool_final" reloadable="true" source="org.eclipse.jst.jee.server:10.ConnectionPool_final"/><Context docBase="11.joinPage" path="/11.joinPage" reloadable="true" source="org.eclipse.jst.jee.server:11.joinPage"/><Context docBase="12.EL" path="/12.EL" reloadable="true" source="org.eclipse.jst.jee.server:12.EL"/><Context docBase="13.ObjEl" path="/13.ObjEl" reloadable="true" source="org.eclipse.jst.jee.server:13.ObjEl"/></Host>
     </Engine>
   </Service>
 </Server>

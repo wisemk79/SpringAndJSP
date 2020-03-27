@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" 
+           src="http://code.jquery.com/jquery-3.3.1.min.js" ></script>
+<title>(01.addClass.html)</title>
+<style>
+     .high_light_0 {background:yellow;font-size:30pt;color:red}
+     .high_light_1 {background:orange}
+     .high_light_2 {background:blue}
+     .high_light_3 {background:green}
+     .high_light_4 {background:red}
+</style>
+<script>
+  $(function(){ 
+	 // $('h1:eq(0)').attr('class','high_light_0')
+	 /*
+	  jQuery에서 스타일을 적용
+	  1.css()->속성명->속성값을 부여(하나씩 부여)=>css({키명:속성명,,,})
+	  2.addClass(적용시킬 클래스명)->한꺼번에 여러개의 스타일을 동시에 설정하고 싶다.
+	     <->removeClass(해제시킬 클래스명)
+	           toggleClass=>addClass<->removeClass 번갈아가면서 실행시켜주는 함수
+	 */
+	 //$('h1').addClass('high_light_0')->동일한 태그를 구분X ->each()함수를 이용
+	 //콜백함수->함수호출시 매개변수로 전달되는 부분이 함수로 구성->호출->그 결과를 받아서 처리
+	 $('h1').addClass(function(index){//각 태그를  구분하는 인덱스번호를 브라우저가 전달
+		 alert(index) //0,1,2,3,4
+		 return 'high_light_'+index
+	 })
+   })          
+  
+</script>
+</head>
+<body>
+   <!-- <h1 class="high_light_0">Item-0</h1> 정적 -->
+   <h1>Item-0</h1>
+   <h1>Item-1</h1>
+   <h1>Item-2</h1>
+   <h1>Item-3</h1>
+   <h1>Item-4</h1>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" 
+           src="http://code.jquery.com/jquery-3.3.1.min.js" ></script>
+<title>jquery</title>
+<script>
+  $(function(){ 
+	  /*
+	                 함수           설명
+	      A,B=>태그           
+	 $(A).append(B)->B를 A의 기존자식의 뒤에 추가할때 사용
+	 $(A).prepend(B)->B를 A의 기존자식의 앞에 추가할때 사용
+	 
+	 $(A).after(B)->B를 A뒤에 추가할때 사용(자식에 추가 X)
+	 $(A).before(B)->B를 A앞에 추가할때 사용(자식에 추가 X)
+
+	  */
+	  //$('div').append('<h1>jQueryTest 222</h1>') //(1) 부모.append(추가시킬 자식)
+	  //$('div').prepend('<h1>jQueryTest 444</h1>')  //(2)
+	  // $('div').after('<h1>DOMTest 555</h1>')  //(3)
+	  // $('div > h1').css('color','red').before('<h1>DOMTest 6666</h1>')//(4)
+	  $('img').attr('width',300).before('<h1>DOMTest 777</h1>')//이미지 앞에 배치
+   })                                                          
+</script>
+</head>
+<body>
+     <!-- <h1>DOMTest 6666</h1> (4) -->
+   <div>
+        <!-- <h1>jQueryTest 444</h1> (2)-->
+        <h1>안녕하세요?</h1>
+        <!-- <h1>jQueryTest 222</h1> (1)-->
+   </div>
+   <!-- <h1>DOMTest 555</h1> (3) -->
+   <h1>반가워요!</h1>
+   <!-- <h1>DOMTest 777</h1> (5) -->
+   <img src="../picCats/Persian.jpg" >
+</body>
+</html>
+
+
+
+
+
+
+
+
+
