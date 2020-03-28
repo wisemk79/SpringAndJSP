@@ -149,7 +149,7 @@
              Note: The pattern used is equivalent to using pattern="common" -->
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" pattern="%h %l %u %t &quot;%r&quot; %s %b" prefix="localhost_access_log" suffix=".txt"/>
 
-      <Context docBase="9.ConnectionPool_preparedStmt" path="/9.ConnectionPool_preparedStmt" reloadable="true" source="org.eclipse.jst.jee.server:9.ConnectionPool_preparedStmt"/><Context docBase="10.ConnectionPool_final" path="/10.ConnectionPool_final" reloadable="true" source="org.eclipse.jst.jee.server:10.ConnectionPool_final"/><Context docBase="11.joinPage" path="/11.joinPage" reloadable="true" source="org.eclipse.jst.jee.server:11.joinPage"/><Context docBase="12.EL" path="/12.EL" reloadable="true" source="org.eclipse.jst.jee.server:12.EL"/><Context docBase="13.ObjEl" path="/13.ObjEl" reloadable="true" source="org.eclipse.jst.jee.server:13.ObjEl"/></Host>
+      <Context docBase="16.FrontController2" path="/16.FrontController2" reloadable="true" source="org.eclipse.jst.jee.server:16.FrontController2"/><Context docBase="17.Forwarding" path="/17.Forwarding" reloadable="true" source="org.eclipse.jst.jee.server:17.Forwarding"/><Context docBase="18.Forwarding2" path="/18.Forwarding2" reloadable="true" source="org.eclipse.jst.jee.server:18.Forwarding2"/></Host>
     </Engine>
   </Service>
 </Server>
