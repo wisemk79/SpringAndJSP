@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+    //1. xhr객체를 얻어오는 함수
+    var httpRequest = null;// xhr객체를 저장할 변수(전역변수)
+
+    function getXHR(){
+        if(window.XMLHttpRequest){
+            //httpRequest = new XMLHttpRequest();
+            return new XMLHttpRequest();
+        }
+    }
+
+    function load(url){
+        //1.xhr객체를 얻어와야 된다.(브라우저)
+        httpRequest = getXHR();
+        //2.서버요청하기전에 기본적인 설정을 한다.->콜백함수지정,Get방식,요청문서
+	    //2.형식) xhr객체명.onreadystatechange=콜백함수;// ()(X)->함수이름만 사용할것
+        httpRequest.onreadystatechange =  viewMessage;
+        //3.xhr객체명.open(3개의 매개변수를 지정)
+	    //1.요청방식(get or post), 2.요청문서명(url) 3.처리방식(비동기방식 or 동기방식)
+	    //비동기 방식=>채팅,메일보내기(상대방이 결과를 보내주는것과 상관없이 다른일을 할 수 있는 방식)
+        httpRequest.open("GET", url, true);
+        //4.xhr객체명.send(null or 매개변수명)
+        httpRequest.send(null);
+    }
+
+    function viewMessage(){
+        //alert("viewMessage() 호출됨")
+        //1.톰캣서버가 클라이언트의 요청을 다 받았는지 확인?->readyState=4(1,2,3만 일부만 요청받은경우)
+        if(httpRequest.readyState == 4){
+            if(httpRequest.status == 200){
+                alert(httpRequest.responseText)
+            }else{
+                alert('실패: ' + htt)
+            }
+        }
+        }
+    </script>
+
+</head>
+<body>
+    
+</body>
+</html>

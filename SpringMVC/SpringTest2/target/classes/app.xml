@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+<!-- spring10 -->
+<!-- autowire(자동으로 찾아서 의존객체를 넣어주는기법을 사용)속성(DL 때문에)  -->
+<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+
+<!-- Setter Method를 통해서 넣어주는 방법 -->
+<!-- (0) byType을 사용하기 전 환경설정  
+<bean name="systemMoniter" class="spring10.SystemMoniter">
+   <property name="call">
+       <ref bean="phoneCall" />
+   </property>
+</bean> -->
+
+<!-- (1) byType을 이용하는 방법(멤버변수의 자료형과 똑같은 자료형의 객체를 찾아서 넣어달라) 
+	autowire의 bytype을 통해서 PhoneCall이라는 자료형을 갖게된다. 
+	
+	autowire속성 => 찾아서 넣어주는 방법을 제시해주는 속성 
+	찾고자하는 자료형의 객체 대상자가 한개 이상이면 에러가 발생이 된다.(반드시 하나만 존재해야한다.) 
+	=>@Autowired 
+-->
+<!-- <bean name="systemMoniter" class="spring10.SystemMoniter" autowire="byType">
+</bean> -->
+
+<!-- 
+	available: expected single matching bean but found 2: <- byType 오류메세지
+	byType을 통해 가져올때 똑같은 자료형이 2개 있는 경우 구분할 수 없기 때문에 오류가 발생한다..
+	따라서 byType을 사용할 때는 한개만있어야한다.
+ -->
+ 
+ <!-- (2) byName을 이용하는 방법(이름으로 찾는 방법) 
+		멤버변수와 이름이 같은 빈즈의 객체를 찾아서 가져오는 방법
+		=>@Resource
+  -->
+  
+<bean name="systemMoniter" class="spring10.SystemMoniter" autowire="byName">
+</bean>
+
+<!-- byName을 사용할 때는 id를 name으로 주고 멤버변수 이름과 같게 설정해야한다.-->
+<bean name="phonecall" class="spring10.PhoneCall" />
+<!-- <bean id="phoneCall2" class="spring10.PhoneCall" /> -->
+
+
+<!-- spring11 -->
+<!-- 자바에서 객체를 생성못하는 클래스 (추상클래스)
+	스프링 컨테이너 -> 해당 자기자신의 빈객체를 생성하지마라 옵션=> abstract=true 
+	자식빈즈 ->parent="부모빈즈의 id부여" => 상속이 되면서 오버라이딩까지 가능하다. 
+	 	class 자식클래스명 extends 부모클래스명 
+	
+	기존 빈즈에 아래의 내용을 넣어주면 해당 클래스는 추상클래스가되어 객체생성을 할 수 없게된다.
+	abstract="true"
+ -->
+<bean id="commonMoniter" class="spring11.SystemMoniter" abstract="true">
+	<property name="periodTime" value="10"/>
+	<property name="sender" ref="smsSender"/>
+</bean>
+
+<bean id="smsSender" class="spring11.SmsSender"/>
+
+<!-- 1.부모의 멤버변수 그대로 사용(상속받으면 가능) 
+	class 자식클래스명 extends 부모클래스명 을 아래처럼 작성하는것 
+-->
+<bean id="doorMoniter" parent="commonMoniter" />
+
+<!-- 2.상속을 받으면서 periodTime=30(오버라이딩) -->
+<bean id="lobbyMoniter" parent="commonMoniter">
+      <property name="periodTime" value="30" />
+</bean>
+
+<!-- 3.상속을 받으면서 periodTime=20(오버라이딩) -->
+<bean id="roomMoniter" parent="commonMoniter">
+      <property name="periodTime" value="20" />
+</bean>
+</beans>
+
+
+
+
+
+

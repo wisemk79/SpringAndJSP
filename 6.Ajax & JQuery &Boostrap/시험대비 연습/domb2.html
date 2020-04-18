@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        //객체생성방법
+        //var 객체명 = new Object();
+
+        const mem = new Object();//생성자와 비슷
+        mem.name = "테스트";
+        mem.id = 1234;
+        mem.hobby = "바둑";
+        mem.sung = "여";
+
+        //setter method 객체명.함수명 = function(매개변수명) { this.속성명 = 값}
+        mem.setName = function(name){
+            this.name = name;
+        }
+
+        //getter method 
+        mem.getName = function(){
+            return this.name;
+        }
+
+
+    </script>
+
+</head>
+<body>
+    
+</body>
+</html>
