@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+<!-- @Autowired,@Resource,@Required,,, 
+     모든 클래스에 어노테이션에 관련된 빈즈를 자동으로 등록시켜주는 역할 옵션
+ -->
+<context:annotation-config />
+
+<!-- 요청클래스를 등록 @RequestMapping("/index.do")있기 때문에 name="index.do"(X)-->
+<bean  class="kr.spring.tiles.controller.IndexController" />
+<bean  class="kr.spring.tiles.controller.Menu1Controller" />
+<bean  class="kr.spring.tiles.controller.Menu2Controller" />
+
+<!-- tiles에 관련된 환경설정을 불러오기(viewResolver가 조금 변환)
+   기존의 prefix,suffix를 이용해서 경로명 및 파일의 확장자를 지정하는 부분이 없다. 
+   setDefinitions("/WEB-INF/tiles-def/tilesdef.xml") 호출해서 멤	버변수(definitions)에 저장
+   환경설정의 내용을 메모리에 올리는 역할 -->
+ 
+<bean id="tilesConfigurer" 
+          class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+       <property name="definitions">
+         <list>
+            <value>/WEB-INF/tiles-def/tilesdef.xml</value>
+         </list>
+       </property>
+</bean>
+
+    <!-- tiles전용 viewResolver 설정(view도 등록)setViewClass(뷰클래스명) 호출 -->
+<bean id="viewResolver"
+         class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+    <property name="viewClass" 
+                    value="org.springframework.web.servlet.view.tiles3.TilesView"  />
+</bean>    
+</beans>
+
+
+
+
+
+
+
+

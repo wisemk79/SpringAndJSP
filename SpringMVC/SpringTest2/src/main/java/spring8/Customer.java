@@ -1,20 +1,18 @@
 package spring8;
+//고객,도서(서버에 접속->ip주소,접속시간을  설정,책대여수 까지 관리)
+import java.util.Set;
 
-
-//고객, 도서 (서버에접속-> ip주소, 접속시간을 설정, 책대여수까지 관리)
-import java.util.Set;//같은데이터는 저장이되지 않음. 
-
-public class Customer extends Object {
-	private Set<Integer> subSet;//책대여수 
-	
-	public void setSubSet(Set<Integer> subSet) {
-		this.subSet = subSet;
-	}
-	
-	
-	
-	@Override //<--어노테이션이 없다면 toString()이라는 오브젝트의 메소드를 사용하는것이 아니라 새로운 toString이라는 메서드를 만든것이된다. 
-	public String toString() {
-		return "Customer[subSet="+ subSet + "]";
-	} 
+public class Customer extends Object{
+    private Set<Integer> subSet;//책대여수
+    
+    public void setSubSet(Set<Integer> subSet) {
+    	this.subSet=subSet;
+    }
+    //어노테이션도 하나의 기능을 가지고 있다. 
+    //@키워드->오버라이딩 되어있는지 확인해주는 기능
+    @Override
+    public String toString() {
+    	// TODO Auto-generated method stub
+    	return "Customer[subSet="+subSet+"]";
+    }
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+
+<!--definition(영역단위) name(영역명)  template(불러올 경로명 및 파일명)
+      put-attribute name="세부항목" value="세부적인 값(불러올 경로명 및 파일명) or 출력문자열"
+      definition(영역)도 복사가 가능->변동사항이 없는부분은 그대로 사용,변동되는 부분->변경
+                             extends="부모영역이름"
+ -->
+<tiles-definitions>
+    <definition name="index" template="/WEB-INF/tiles-view/template/layout.jsp">
+        <put-attribute name="title" value="메인 페이지" />
+        <put-attribute name="menu" 
+                              value="/WEB-INF/tiles-view/template/menu.jsp" />
+       <put-attribute name="header" 
+                              value="/WEB-INF/tiles-view/template/header.jsp" />
+       <put-attribute name="body" 
+                              value="/WEB-INF/tiles-view/body.jsp" />
+       <put-attribute name="footer" 
+                              value="/WEB-INF/tiles-view/template/footer.jsp" />
+    </definition>
+    
+    <definition name="menu1" extends="index">
+        <put-attribute name="title" value="두번째 페이지" />
+        <put-attribute name="body" 
+                              value="/WEB-INF/tiles-view/body-menu1.jsp" />
+    </definition>
+    
+    <definition name="menu2" extends="index">
+        <put-attribute name="title" value="세번째 페이지" />
+        <put-attribute name="body" 
+                              value="/WEB-INF/tiles-view/body-menu2.jsp" />
+    </definition>
+</tiles-definitions>
+
+
+

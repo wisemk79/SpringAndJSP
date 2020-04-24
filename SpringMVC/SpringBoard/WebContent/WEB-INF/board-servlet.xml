@@ -23,22 +23,63 @@
      /index.do 요청한다면 /list.jsp로 이동하는 구문을 환경설정
        ~.setViewName(list.jsp)
  -->
- <bean name="/index.do" 
+ <!-- JNDI를 통해서 DB연결  -->
+ <bean id="boardDAO"  class="lee.BoardDAO" />
+ 
+<!-- 1.글목록보기 public setDao(BoardDAO dao){this.dao=dao;}-->
+<bean name="/list.do"  class="lee.ListActionController">
+   <property name="dao">
+        <ref bean="boardDAO" />
+   </property>
+</bean>
+ 
+<!-- 2.글쓰기 폼으로 이동 -->
+ <bean name="/writeui.do" 
         class="org.springframework.web.servlet.mvc.ParameterizableViewController">
-    <property name="viewName" value="list" />       
+    <property name="viewName" value="write" />       
  </bean>
  
- <!--  /good/index.do  (/list2.jsp로 이동하라)-->
- <bean name="/good/index.do" 
-        class="org.springframework.web.servlet.mvc.ParameterizableViewController">
-    <property name="viewName" value="list2" />       
+ <!-- 3.글쓰기구현 -->
+ <bean name="/write.do"  class="lee.WriteActionController">
+   <property name="dao">
+        <ref bean="boardDAO" />
+   </property>
+   <property name="commandClass" value="lee.BoardCommand" />
  </bean>
  
-<!-- 요청명령어에 따른 컨트롤러 클래스를 작성(=모델2의 액션클래스) 
-         /list.do ->action.ListAction
-         /index2.do요청했을때 lee패키지에 있는 TestActionController클래스가 처리해줬으면 좋겠다.
+<!-- 4.글상세보기 -->
+<bean name="/retrieve.do"  class="lee.RetrieveActionController">
+   <property name="dao">
+        <ref bean="boardDAO" />
+   </property>
+</bean>
+
+<!-- 5.글수정하기(=글쓰기와 비슷)  -->
+<bean name="/update.do"  class="lee.UpdateActionController">
+   <property name="dao">
+        <ref bean="boardDAO" />
+   </property>
+   <property name="commandClass" value="lee.BoardCommand" />
+ </bean>
+ 
+<!-- 6.글삭제하기(=글상세보기와 동일) 매개변수가 전달 -->
+<bean name="/delete.do"  class="lee.DeleteActionController">
+   <property name="dao">
+        <ref bean="boardDAO" />
+   </property>
+</bean>
+
+<!-- 7.글조회 하기(검색분야,검색어를 입력) 선택적
+      setDao(BoardDAO board){
+         this.dao=dao;
+      }
  -->
-<bean name="/index2.do"  class="lee.TestActionController" />
+<bean name="/search.do"  class="lee.SearchActionController">
+   <property name="dao">
+        <ref bean="boardDAO" />
+   </property>
+</bean>
+
 </beans>
 
 

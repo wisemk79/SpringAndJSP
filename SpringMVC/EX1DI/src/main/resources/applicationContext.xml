@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+	
+	<!-- ex.di2.Cats클래스를 cats라는 아이디를 지정해서 객체(bean)을 생성-->
+	<bean id="cats" class="ex.di2.Cats"/>
+	
+	<bean id="myCats" class="ex.di2.MyCats">
+		<property name="cats"><!-- 첫번째 프로퍼티에 넣어줄것 -->
+			<ref bean="cats"/><!-- 이 프로퍼티는 위의 Cats객체를 참조한다. -->
+		</property>
+		<property name="firstCatName" value="순덕"></property><!-- MyCats의 필드이름에 맞게 이름을 넣어주고 값을 설정해준다. -->
+		<property name="secondCatName" value="나비"></property>
+		<property name="firstCatAge" value="1"></property>
+		<property name="secondCatAge" value="2"></property>
+	</bean>
+	
+	<!-- ex.di3-->
+	
+	
+	<bean id="cat1" class="ex.di3.MyCats">
+		<constructor-arg>
+			<value>나비</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>2</value>
+		</constructor-arg>
+		<constructor-arg>
+			<list><!-- 리스트 형태의 자료형을 사용하는경우 -->
+				<value>잠자기</value>
+				<value>꾹꾹이</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="cat2" class="ex.di3.MyCats">
+		<constructor-arg>
+			<value>삼식이</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>4</value>
+		</constructor-arg>
+		<constructor-arg>
+			<list><!-- 리스트 형태의 자료형을 사용하는경우 -->
+				<value>구르기</value>
+				<value>먹기</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="catsInfo" class="ex.di3.Cats">
+		<constructor-arg >
+		<!-- Cats 에서 MyCats라는 자료형의 멤버변수는 위에서 생성한 cat1을 참조한다. -->
+			<ref bean="cat1"/>
+		</constructor-arg>
+	</bean>
+	
+	<!-- ex.di4-->
+		<bean id="cat3" class="ex.di4.MyCats">
+		<constructor-arg>
+			<value>나비</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>2</value>
+		</constructor-arg>
+		<constructor-arg>
+			<list><!-- 리스트 형태의 자료형을 사용하는경우 -->
+				<value>잠자기</value>
+				<value>꾹꾹이</value>
+			</list>
+		</constructor-arg>
+		</bean>
+	
+	
+		<bean id="cat4" class="ex.di4.MyCats">
+		<constructor-arg value="호랑이"/>
+		<constructor-arg value="1"/>
+		<constructor-arg>
+			<list><!-- 리스트 형태의 자료형을 사용하는경우 -->
+				<value>우다다</value>
+				<value>박치기</value>
+			</list>
+		</constructor-arg>
+		<property name="weight" value="3.2"/>
+		<property name="color" value="white"/>
+		</bean>
+	
+	<bean id="catsInfo1" class="ex.di4.Cats">
+		<constructor-arg >
+			<ref bean="cat3"/>
+		</constructor-arg>
+	</bean>
+	
+	<!--ex.di7 resource annotation p 네임스페이스는 세터메서드에 property세팅하는것과같고 c 네임스페이스는 constructor-arg태그와 같은것이다. -->
+	<bean id="homeController" class="ex.di7.HomeController"/>
+	<bean id="num1" class="ex.di7.Number" p:number="10"/>
+	<bean id="num2" class="ex.di7.Number" p:number="20"/>
+	
+
+</beans>

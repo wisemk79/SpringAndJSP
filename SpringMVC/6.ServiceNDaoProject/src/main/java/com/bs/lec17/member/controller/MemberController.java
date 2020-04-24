@@ -3,11 +3,11 @@ package com.bs.lec17.member.controller;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bs.lec17.member.Member;
 import com.bs.lec17.member.service.MemberService;
@@ -56,7 +56,10 @@ public class MemberController {
 		//서비스 객체에서 멤버 레지스터 메소드를 통해 데이터 값을 적재한다. 
 		service.memberRegister(memId, memPw, memMail, memPhone1, memPhone2, memPhone3);
 		
-		//데이터값을 jsp에 전달하도록 set해준다.
+		//데이터값을 jsp에 전달하도록 set해준다. <--이 아래의 것도 Member member를 직접 넣어주면 알아서 jsp로 전달되며, 
+		//해당 내용을 jsp에서 내가 정한 이름으로 el태그로 불러오고 싶으면  @ModelAttribute("mem") Member member 이라고 매개변수에 넣어주면 
+		//jsp에서 ${mem.memId}이런식으로 값을 불러올 수 있다.
+		//또한 @ModelAttribute 어노테이션의 특징이 있는데 예제7의 컨트롤러를 살펴보자 
 		model.addAttribute("memId", memId);
 		model.addAttribute("memPw", memPw);
 		model.addAttribute("memMail", memMail);
@@ -65,11 +68,18 @@ public class MemberController {
 		return "memJoinOk";//회원가입이 완료되면 memJoinOk로 이동하여 값을 전달한다
 	}
 	
+	
+//	HttpServletRequest request객체를 이용하는대신 @RequestParam을 사용하는 방법이있다, 이렇게되면 request.getParameter를 이용할 필요가 없게된다.
+	// @RequestParam()의 매개변수로는 입력받은 input태그의 name 속성값을 이용한다. 
+	// @RequestParam()은 여러가지 속성 값이 있는데,
+	//required값이 false면 값이없어도 예외를 발생하지 않는다.
+	//defaultValue는 값이 없을 떄 설정해줄 값이다.
 	@RequestMapping(value="/memLogin", method=RequestMethod.POST)
-	public String memLogin(Model model, HttpServletRequest request) {
+	public String memLogin(Model model, @RequestParam("memId") String memId ,
+			@RequestParam(value="memPw", required=false, defaultValue="1234") String memPw) {
 		
-		String memId = request.getParameter("memId");
-		String memPw = request.getParameter("memPw");
+		//String memId = request.getParameter("memId");
+		//String memPw = request.getParameter("memPw");
 		
 		//서비스객체에서 memberSearch메서드를 이용하여 회원의 정보를 검색한다.
 		Member member = service.memberSearch(memId, memPw);

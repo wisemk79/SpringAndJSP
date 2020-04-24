@@ -18,7 +18,8 @@ public class Main {
 		DependencyBean dependencyBean02 =
 				ctx.getBean("dependencyBean" , DependencyBean.class);
 		
-//		만약 getBean 객체를 가져올때마다 새로운 객체를 생성하고싶다면 xml에서 prototype으로 scope를 설정해주면된다. 그렇게되면 객체가2번 생성되기 떄문에 컨스트럭터와 세터가 2번호출된다.
+//		만약 getBean 객체를 가져올때마다 새로운 객체를 생성하고싶다면 xml에서 prototype으로 scope를 설정해주면된다. 
+		//그렇게되면 객체가2번 생성되기 떄문에 컨스트럭터와 세터가 2번호출된다.
 		
 		
 		if(dependencyBean01.equals(dependencyBean02)) {

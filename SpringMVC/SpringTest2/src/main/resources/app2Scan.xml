@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+<!-- component-scan base-package="최상위패키지명.하위패키지명..."-->
+<context:component-scan base-package="com.spring.anno5"/>
+
+<!-- @Autowired(자동으로 찾아서 의존객체를 넣어주는기법을 사용)속성(DL 때문에)
+       @Required,@Resource를 하기위해서 빈즈클래스를 등록(xml) 
+         ctrl키누른 상태 마우스포인터를 이용해서(링크걸리면 제대로 환경설정했는지 확인 가능) -->
+<!-- 
+<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+<bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" />
+<bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor" /> -->
+
+<!-- 내부적으로 자동적으로 스프링컨테이너가 이렇게 처리해준다.
+<bean id="homeController2"  class="com.spring.anno5.HomeController2" />
+<bean id="camera"  class="com.spring.anno5.Camera" />
+<bean id="camera2"  class="com.spring.anno5.Camera2" />
+
+ -->
+
+</beans>
+
+
+
+
+
+

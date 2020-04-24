@@ -3,74 +3,31 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
 
-<!--
-	scope="prototype"
-							빈의 범위
-	singleton=>생성된 객체는 하나인데 요청할떄마다 대여해준다.
-	prototype=> 매번 요청할떄마다 새로운객체를 만들어서 대여(메모리날비가 심할 수 있다.
-	
-	scope를 prototype으로 주는 경우 아래와 같이 새로운 객체를 만들어서 주기 때문에 3번 호출되게된다. 
-	 	MessageBeanImplDI 생성자 호출됨!
-		setGreeting() 호출됨!
-		MessageBeanImplDI 생성자 호출됨!
-		setGreeting() 호출됨!
-		MessageBeanImplDI 생성자 호출됨!
-		setGreeting() 호출됨!
-	 
-	====================================================
-	내장객체의 사용범위와 동일하다.
-	
-	session=> 로그인한 동안=> 객체를 공유 
-	request => 한 페이지 이상 객체를 공유 -->
- 
-<!-- 생성자를 설정해서 값을 넣어줄때 사용하는 태그 <constructor-arg index="0"> (생성자의 갯수만큼 만들 수 있다.) 
-		이객체를 만들때, 첫번째 생성자(0번 인덱스)에 대한민국이라는 값을 넣어준다라는 의미 
-		
-		<constructor-arg ref="상대방 클래스의 객체 id"/>
-								has a의 관계를 의미  
--->
-	<!--  -->
-	
-<!-- 	public void setGreeting(String greeting)
-		세터메소드의 경우
-		<property name="greeting">
-		</property>
-		라는 태그를 사용하며 프로퍼티는 컨스트럭터와 다르게 index대신 
-		name으로 구분하며 name에는 멤버변수가 들어간다. 
- -->
-		
-<bean id="mBean" class="spring3.MessageBeanImplDI" scope="prototype">
-	<constructor-arg index="0">
-		<value>대한민국</value>
-	</constructor-arg>
-	<constructor-arg index="1">
-		<value>서울</value>
-	</constructor-arg>
-	<property name="greeting">
-		<value>안녕,</value>
-	</property>
-	
-	
-		<!-- ref는 객체를 가리키는 것으로 지금 아래의 태그는 outFile객체를 의미한다.(has a) 아래의 태그를 참조해서 값을 넣어달라.   
-			<ref bean="상대방 객체의 구분 id값"/>
-			=>메서드의 매개변수로서 상대방의 객체를 가져와서 매개변수로 값을 저장해달라 표시 
-		-->
-	<!-- <property name="outF">  => setOutF(outF)
-		<ref bean="outFile"/>	
-	</property> 
-	위의 태그를 아래처럼 사용할 수 있다. 
-	-->
-	<property name="outF" ref="outFile"> </property>
-	
+<!--public void setGreeting(String greeting)  -->
+<bean id="mBean"   class="spring3.MessageBeanImplDI"  scope="prototype">
+   <constructor-arg index="0">
+      <value>대한민국</value>
+   </constructor-arg>
+   <constructor-arg index="1">
+      <value>서울</value>
+   </constructor-arg>
+   <property name="greeting">
+     <value>안녕,</value>
+   </property>
+   
+   <!-- <property name="outF">
+         <ref bean="outFile" />
+   </property> -->
+   <property name="outF" ref="outFile" />  
 </bean>
 
-
-<!-- has a 로 만들어질 객체 생성  -->
+<!-- has a 관계로 만들어질 객체생성 -->
 <bean id="outFile" class="spring3.OutFileImpl">
-	<property name="filePath">
-		<value>/Users/wisemk/Desktop/study</value>
-	</property>
+  <property name="filePath">
+     <value>c:/webtest/good.txt</value>
+  </property>
 </bean>
+
 
 </beans>
 

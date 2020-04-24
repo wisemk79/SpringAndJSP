@@ -1,0 +1,51 @@
+<!-- context 네임스페이스 정의 추가 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	<!-- 위에서 네임스페이스에 정의를 추가하고 아래의 태그를 작성해주면 어노테이션 사용이 가능하다. -->
+	<context:annotation-config />
+	
+	
+<!-- 	
+	직접 프로퍼티로 ref bean클래스 참조시키는 방법
+	<bean id="textEditor" class="ex.di5.TextEditor">
+		<property name="spellChecker">
+			<ref bean="spellChecker"/>
+		</property>
+		<property name="name" value="Generic Text Editor"></property>
+	</bean> -->
+	
+	<!-- 
+	autowire byName으로 속성 추가시 자동 연결 시도. 
+	식별자(byName)가 같은 객체 탐색해서 존재하면 연결.
+	<bean id="textEditor" class="ex.di5.TextEditor" autowire="byName">
+		<property name="name" value="Generic Text Editor"></property>
+	</bean> 
+	<bean id="spellChecker" class="ex.di5.SpellChecker"></bean>
+	-->
+	
+	
+	<!-- autowire byType으로 연결하는 방법
+	spellchecker의 식별자(id)가 달라도 자료형이 같으면 의존주입된다.
+	 
+	<bean id="textEditor" class="ex.di5.TextEditor" autowire="byType">
+		<property name="name" value="Generic Text Editor"></property>
+	</bean>
+	
+	<bean id="spellChecker2" class="ex.di5.SpellChecker"></bean>
+	-->
+	
+	<!-- 어노테이션 사용하는방법
+		명시적 의존주입이 없어도 자동주입(byType) 의존주입이 일어난다.
+	 -->
+	<bean id="textEditor" class="ex.di6.TextEditor">
+		<property name="name" value="Generic Text Editor"></property>
+	</bean>
+	
+	<bean id="spellChecker2" class="ex.di6.SpellChecker"></bean>
+
+</beans>

@@ -1,3 +1,0 @@
-#commandPro.properties
-#key(command)=value(packagename.classname)
-/list.do=action.ListAction

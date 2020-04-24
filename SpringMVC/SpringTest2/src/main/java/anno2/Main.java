@@ -18,7 +18,7 @@ public class Main {
 		context.registerShutdownHook();
 		
 		//4.context->getBean()를 이용해서 객체 얻어오면 된다.
-		SystemMoniter moniter=context.getBean("moniter", SystemMoniter.class);//<bean id="moniter"~>
+		SystemMoniter moniter=(SystemMoniter)context.getBean("moniter");//<bean id="moniter"~>
 		System.out.println("moniter=>"+moniter);//moniter.toString()
 		
 		//5.JVM이 종료

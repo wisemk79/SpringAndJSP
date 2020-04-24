@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+<!-- 
+   <Resource 
+   		name="jdbc/orcl(JNDI이름)" 외부클래스(BoardDAO)
+            외부에서 접속할때 DB의 정보를 알수 있도록 해주는 고유의 이름
+        auth="container" ->리소스(자원(DB)를 누가 관리할 것인가?(스프링)
+        type="javax.sql.DataSource" ->커넥션풀에 대한 DataSource의 fullName
+        username="scott"  ->접속할 계정명
+        password="tiger" ->접속할 암호
+        driverClassName="oracle.jdbc.driver.OracleDriver" ->접속할 Driver명
+        factory="org.apache.commons.dbcp.BasicDataSourceFactory"
+                         ->커넥션풀을 생성해주는 클래스 fullName
+        url="jdbc:oracle:thin:@localhost:1521:orcl" ->접속 url
+        maxActive="20" ->최대로 빌려줄 수있는 커넥션풀 갯수 지정하는 속성
+        maxIdle="10" /> ->최대로 여분이 있는 커넥션풀 갯수 지정하는 속성
+   -->
+ 
+ 
+<!--
+    auth : 컨테이너를 자원 관리자로 기술
+    name : JDBC이름, 변경 가능
+    driverClassName : JDBC 드라이버
+    type : 웹에서 이 리소스를 사용할 때 DataSource로 리턴됨
+    username : 접속계정
+    password : 접속할 계정 비밀번호
+    
+    loginTimeout : 연결 끊어지는 시간
+    maxActive : 최대 연결 가능한 Connection수 (기본 20개)
+    maxIdle : Connection pool 유지를 위해 최대 대기 connection 숫자
+    maxWait : 사용 가능한 커넥션이 없을 때 커넥션 회수를 기다리는 시간 (1000 = 1초)
+    testOnBorrow : db에 test를 해볼 것인지
+-->
+	<Resource
+		name="jdbc/oracle11g"
+        auth="container"
+        type="javax.sql.DataSource"
+        username="scott"
+        password="tiger"
+        driverClassName="oracle.jdbc.driver.OracleDriver"
+        factory="org.apache.commons.dbcp.BasicDataSourceFactory"
+        url="jdbc:oracle:thin:@localhost:1521:xe"
+        maxActive="20"
+        maxIdle="10" />
+</Context>

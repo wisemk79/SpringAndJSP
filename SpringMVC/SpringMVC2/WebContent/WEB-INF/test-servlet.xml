@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+<!-- (4) ModelAndView 정보(분석해서 어느 경로에 어떤 파일로 이동) (5)View
+              prefix(멤버변수명)  value="페이지가 있는 상대경로를 지정"
+              suffix(멤버변수명) value="화면에 보여줄 페이지의 확장자를 쓰게 되어있다."
+-->
+<bean id="viewResolver"  
+      class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+     <property name="viewClass" 
+                     value="org.springframework.web.servlet.view.JstlView" />  
+     <property name="prefix"  value="/" />   
+     <property name="suffix"  value=".jsp" />      
+</bean>
+<!-- (2) 요청에 따른 컨트롤러를 누가 처리하는지 문의  -->
+<bean id="defaultHandlerMapping" 
+          class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"  />
+
+<!-- (3) 요청명령어에 해당하는 컨트롤러를 이용(처리) 
+    <bean name="/요청명령어.do" class="패키지명....처리할 컨트롤러 클래스명" />
+     /index.do 요청한다면 /list.jsp로 이동하는 구문을 환경설정
+       ~.setViewName(list.jsp)
+ -->
+ <bean name="/index.do" 
+        class="org.springframework.web.servlet.mvc.ParameterizableViewController">
+    <property name="viewName" value="list" />       
+ </bean>
+ 
+ <!--  /good/index.do  (/list2.jsp로 이동하라)-->
+ <bean name="/good/index.do" 
+        class="org.springframework.web.servlet.mvc.ParameterizableViewController">
+    <property name="viewName" value="list2" />       
+ </bean>
+ 
+<!-- 요청명령어에 따른 컨트롤러 클래스를 작성(=모델2의 액션클래스) 
+         /list.do ->action.ListAction
+         /index2.do요청했을때 lee패키지에 있는 TestActionController클래스가 처리해줬으면 좋겠다.
+ -->
+<bean name="/index2.do"  class="lee.TestActionController" />
+</beans>
+
+
+
+
+
+
+
+

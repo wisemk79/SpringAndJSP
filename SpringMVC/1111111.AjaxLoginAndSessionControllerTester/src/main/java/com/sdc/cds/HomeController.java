@@ -169,6 +169,8 @@ public class HomeController {
 		final String id1="abcde";
 		final String id2="efghi";
 		
+		
+		Map<String, Object> sendjson = new HashMap<String, Object>();
 		//세션에있는 속성이름들을 가져온다.
 		Enumeration se = session.getAttributeNames();
 		System.out.println("세션확인1=> " + se.hasMoreElements());//
@@ -187,7 +189,8 @@ public class HomeController {
 					responseData.put("mem_name", "victolee");
 					responseData.put("mem_tel", "01021312123");
 					responseData.put("mem_email", "avds@dsfa.com");
-					responseData.put("isLogged", true);
+					sendjson.put("mem", responseData);
+					sendjson.put("isLogged", true);
 					break;
 				case id2:
 					System.out.println("스위치문 실행 id2");
@@ -196,7 +199,8 @@ public class HomeController {
 					responseData.put("mem_name", "jason");
 					responseData.put("mem_tel", "01032435435");
 					responseData.put("mem_email", "dsdcs@scdcd.com");
-					responseData.put("isLogged", true);
+					sendjson.put("mem", responseData);
+					sendjson.put("isLogged", true);
 					break;
 			}
 			
@@ -207,15 +211,20 @@ public class HomeController {
 			 * */
 		}
 		
+		
+		
 		System.out.println("세션확인2=>"+ sessionExistCheck);
 		if(!sessionExistCheck) {
 			System.out.println("세션확인2실행");
-			responseData.put("SESSION", "NO");
-			responseData.put("isLogged", false);
+			sendjson.put("SESSION", "NO");
+			sendjson.put("isLogged", false);
 		}
 		
 		
-		return responseData;
+		
+		
+		
+		return sendjson;
 	}
 	
 	

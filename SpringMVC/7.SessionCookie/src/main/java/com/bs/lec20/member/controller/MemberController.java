@@ -34,6 +34,8 @@ public class MemberController {
 		return request.getContextPath();//request객체를 통해 컨텍스트 패스를 가져온다. /lec20
 	}
 	
+	//@ModelAttribute어노테이션을 메서드 위에 선언하게되면 memRemoveOk.jsp에서 볼 수 있듯이, 어떠한 jsp에서든지
+	// 값을 ${ServerTime} 이런식으로 값을 불러 올 수 있다.
 	@ModelAttribute("serverTime")
 	public String getServerTime(Locale locale) {
 		

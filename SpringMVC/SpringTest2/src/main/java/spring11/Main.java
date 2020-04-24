@@ -7,31 +7,31 @@ public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		//1.xml파일이 여러개 존재하면  배열로 관리하여 ->파일명 부여 ->resource자동인식 
-		// 콤마해서 다른 xml을 계속 추가하여 참조 할 수 있다. 
-		//String [] configLocation = new String[] {"applicationContext.xml"},{"applicationContext.xml"},{"applicationContext.xml"}
-		String [] configLocation = new String[] {"app.xml"};
+        //1.xml파일이 여러개 존재=>배열로 관리->파일명부여=>resource 자동인식
+		String [] configLocation=new String[] {"app.xml"};
 		
-		//2.xml파일을 읽어들임 -> 메모리 관리까지 처리해주는 객체가 필요 (불러올 배열을 넣어줌 )
-		AbstractApplicationContext context = new ClassPathXmlApplicationContext(configLocation);
+		//2.xml파일을 읽어들임->메모리 관리까지 처리해주는 객체가 필요
+		AbstractApplicationContext context=
+				          new ClassPathXmlApplicationContext(configLocation);
 		
+		//3.JVM이 종료될때 context객체도 같이 메모리해제
+		context.registerShutdownHook();
 		
-		//3.JVM이 종료될 때(클라이언트가 종료될때) context 객체도 같이 메모리 해제 
-		context.registerShutdownHook();//어플리케이션이 종료되면 자동으로 해제될 수 있도록 예약하는 메서드이다. 
+		//4.context->getBean()를 이용해서 객체 얻어오면 된다.
+		SystemMoniter moniter=context.getBean("doorMoniter",SystemMoniter.class);//<bean id="moniter"~>
+		System.out.println("moniter=>"+moniter);//moniter.toString()
 		
-		//4.context -> getBean()을 이용해서 객체를 얻어오면 된다. 
-		SystemMoniter moniter= context.getBean("doorMoniter", SystemMoniter.class);
-		System.out.println("moniter=>" + moniter);
+		SystemMoniter moniter2=context.getBean("lobbyMoniter",SystemMoniter.class);//<bean id="moniter"~>
+		System.out.println("moniter2=>"+moniter2);
 		
-		SystemMoniter moniter2= context.getBean("lobbyMoniter", SystemMoniter.class);
-		System.out.println("moniter=>" + moniter2);
-		
-		SystemMoniter moniter3= context.getBean("roomMoniter", SystemMoniter.class);
-		System.out.println("moniter=>" + moniter3);
-		
+		SystemMoniter moniter3=context.getBean("roomMoniter",SystemMoniter.class);//<bean id="moniter"~>
+		System.out.println("moniter3=>"+moniter3);
 		
 		//5.JVM이 종료
-		context.close();//JVM이 종료시 컨테이너에 존재하는 모든빈(객체)도 종료(메모리해제) 
+		context.close();//JVM이 종료시 컨터이너에 존재하는 모든 빈(객체)도 종료(메모리 해제)
 	}
 
 }
+
+
+
