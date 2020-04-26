@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <!-- 여기는 매핑할 MemberMapper.java의 풀패키지명을 적어준다 -->
+ <mapper namespace="com.hwig.shop.MemberMapper">
+ 	<resultMap type="Member" id="MemberResultMap">
+ 		<result property="mem_id" column="mem_id"/>
+ 		<result property="mem_pw" column="mem_pw"/>
+ 		<result property="mem_tel" column="mem_tel"/>
+ 		<result property="mem_name" column="mem_name"/>
+ 		<result property="mem_addr" column="mem_addr"/>
+ 		<result property="mem_email" column="mem_email"/>
+ 		<result property="mem_regda" column="mem_regda"/>
+ 	</resultMap>
+ 	
+ 	
+ 	<!-- id의 경우에는 Mapper.java에 동일하게 사용해야된다. -->
+	<select id="login" resultMap="MemberResultMap">
+		select * from hwig_mem where(mem_id=#{mem_id} and mem_pw=#{mem_pw})
+	</select>
+	
+	 <!-- parameterType 에는 구문에 전달될 파라미터의 패키지 경로를 포함한 전체 클래명이나 별칭이 들어간다  -->
+    <insert id="insertMember" parameterType="com.hwig.shop.MemberVO" >
+        insert into hwig_mem values(#{mem_id},#{mem_pw},#{mem_tel},#{mem_name},#{mem_addr},#{mem_email}, default)
+    </insert>
+    
+    <update id="updateMember" parameterType="com.hwig.shop.MemberVO">
+    	update hwig_mem set mem_pw=#{mem_pw}, mem_tel=#{mem_tel}, mem_name=#{mem_name}, mem_addr=#{mem_addr}, mem_email=#{mem_email} where mem_id=#{mem_id}
+    </update>
+    
+    <delete id="deleteMember" parameterType="com.hwig.shop.MemberVO">
+        delete hwig_mem where(mem_id=#{mem_id})
+    </delete>
+ </mapper>

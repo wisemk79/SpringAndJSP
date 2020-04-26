@@ -34,7 +34,7 @@ public class MybatisController {
         List<Member> memberList = memberDAOService.getMembers();
         result.addObject("result", memberList);
         result.setViewName("main");
-        System.out.println(result);
+        System.out.println(memberList);
         return result;
     }
     

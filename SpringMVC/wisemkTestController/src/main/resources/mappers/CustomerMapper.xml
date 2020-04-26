@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.hwig.shop.CustomerMapper">
+ 	<resultMap type="NoticeVO" id="NoticeResultMap">
+ 		<result property="notice_id" column="NOTICE_ID"/>
+ 		<result property="notice_subject" column="NOTICE_SUBJECT"/>
+ 		<result property="notice_content" column="NOTICE_CONTENT"/>
+ 		<result property="notice_regdate" column="NOTICE_REGDATE"/>
+ 		<result property="notice_hit" column="NOTICE_HIT"/>
+ 	</resultMap>
+ 	
+ 	
+	<select id="getNoticeList" resultType="com.hwig.shop.NoticeVO">
+		select * from hwig_notice
+	</select>
+	
+
+	<select id="checkEmail" parameterType="com.hwig.shop.MemberVO" resultType="int">
+		select count(*) from hwig_mem where mem_email=#{mem_email, jdbcType=VARCHAR}
+	</select>
+	
+    <insert id="insertMember" parameterType="com.hwig.shop.MemberVO">
+        insert into hwig_mem values(#{mem_id, jdbcType=VARCHAR},#{mem_pw, jdbcType=VARCHAR},#{mem_tel, jdbcType=VARCHAR},#{mem_name, jdbcType=VARCHAR},#{mem_addr, jdbcType=VARCHAR},#{mem_email, jdbcType=VARCHAR},#{mem_regdate, jdbcType=DATE})
+    </insert>
+    
+
+ </mapper>
