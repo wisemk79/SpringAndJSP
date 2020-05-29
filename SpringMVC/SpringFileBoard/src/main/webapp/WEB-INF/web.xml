@@ -2,6 +2,20 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
   <display-name>SpringMVC</display-name>
   
+  <!-- DB연동 외부환경설정을 불러온다.(WEB-INF에서만 환경설정X)
+      src에서도 환경설정을 저장하고 불러올 수 있다. 형식) classpath:경로명 및 불러올 파일명
+   -->
+  <context-param>
+         <param-name>contextConfigLocation</param-name>
+         <param-value>classpath:config/applicationContext.xml</param-value>
+  </context-param>
+  
+  <listener>
+     <listener-class>
+        org.springframework.web.context.ContextLoaderListener
+     </listener-class>
+  </listener>
+  
   <!-- (1)웹상에서 요청(컨트롤러이름을 지정) -->
   <servlet>
      <servlet-name>dispatcher</servlet-name>

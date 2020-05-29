@@ -3,27 +3,26 @@
      PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
      "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.hwig.shop.CustomerMapper">
- 	<resultMap type="NoticeVO" id="NoticeResultMap">
- 		<result property="notice_id" column="NOTICE_ID"/>
- 		<result property="notice_subject" column="NOTICE_SUBJECT"/>
- 		<result property="notice_content" column="NOTICE_CONTENT"/>
- 		<result property="notice_regdate" column="NOTICE_REGDATE"/>
- 		<result property="notice_hit" column="NOTICE_HIT"/>
- 	</resultMap>
  	
- 	
+ 	<!-- 공지사항 리스트 -->
 	<select id="getNoticeList" resultType="com.hwig.shop.NoticeVO">
 		select * from hwig_notice
 	</select>
 	
-
-	<select id="checkEmail" parameterType="com.hwig.shop.MemberVO" resultType="int">
-		select count(*) from hwig_mem where mem_email=#{mem_email, jdbcType=VARCHAR}
+	<!-- 공지사항 내용 -->
+	<select id="getNoticeArticle" parameterType="int" resultType="com.hwig.shop.NoticeVO">
+		select * from hwig_notice where notice_id=#{notice_id}
 	</select>
 	
-    <insert id="insertMember" parameterType="com.hwig.shop.MemberVO">
-        insert into hwig_mem values(#{mem_id, jdbcType=VARCHAR},#{mem_pw, jdbcType=VARCHAR},#{mem_tel, jdbcType=VARCHAR},#{mem_name, jdbcType=VARCHAR},#{mem_addr, jdbcType=VARCHAR},#{mem_email, jdbcType=VARCHAR},#{mem_regdate, jdbcType=DATE})
-    </insert>
+	<!-- 공지사항 조회수 증가 -->
+	<update id="noticeHitUp" parameterType="com.hwig.shop.NoticeVO">
+		update hwig_notice set notice_hit = notice_hit + 1 where notice_id = #{notice_id}
+	</update>
+	
+	<!-- 자주묻는질문 리스트 -->
+	<select id="getFaqList" resultType="com.hwig.shop.FaqVO">
+		select * from hwig_temp
+	</select>
     
 
  </mapper>

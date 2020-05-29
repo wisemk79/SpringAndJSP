@@ -31,21 +31,21 @@
 	
 	<!-- autowire byType으로 연결하는 방법
 	spellchecker의 식별자(id)가 달라도 자료형이 같으면 의존주입된다.
-	 
-	<bean id="textEditor" class="ex.di5.TextEditor" autowire="byType">
+	 -->
+	<bean id="textEditor" class="ex.di5.TextEditor" autowire="byName">
 		<property name="name" value="Generic Text Editor"></property>
 	</bean>
 	
-	<bean id="spellChecker2" class="ex.di5.SpellChecker"></bean>
-	-->
+	<bean id="spellChecker" class="ex.di5.SpellChecker"></bean>
+	
 	
 	<!-- 어노테이션 사용하는방법
 		명시적 의존주입이 없어도 자동주입(byType) 의존주입이 일어난다.
 	 -->
-	<bean id="textEditor" class="ex.di6.TextEditor">
+<!-- 	<bean id="textEditor" class="ex.di6.TextEditor">
 		<property name="name" value="Generic Text Editor"></property>
 	</bean>
 	
-	<bean id="spellChecker2" class="ex.di6.SpellChecker"></bean>
+	<bean id="spellChecker2" class="ex.di6.SpellChecker"></bean> -->
 
 </beans>

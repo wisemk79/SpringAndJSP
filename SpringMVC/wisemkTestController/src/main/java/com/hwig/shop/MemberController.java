@@ -66,13 +66,12 @@ public class MemberController {
 		String sessionId = null;
 		MemberVO  sessionData = null;
 		
-		
-		//세션에있는 속성이름들을 가져온다.
+	
 		Enumeration se = session.getAttributeNames();
 		Boolean sessionExistCheck = se.hasMoreElements();
 		while(se.hasMoreElements()){
 			String getse = se.nextElement()+"";
-			//세션이름들을 출력한다. 		
+	
 			System.out.println("@@@@@@@ session : "+getse+" : "+session.getAttribute(getse));
 			sessionId = (String) session.getAttribute(getse);
 		}

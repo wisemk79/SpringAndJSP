@@ -20,4 +20,33 @@ public class CustomerDAOService  implements CustomerDAO{
 		list = customerMapper.getNoticeList();
 		return list;
 	}
+
+	@Override
+	public NoticeVO getNoticeArticle(int notice_id) {
+		// TODO Auto-generated method stub
+		NoticeVO result = new NoticeVO();
+		CustomerMapper customerMapper = sqlSession.getMapper(CustomerMapper.class);
+		result = customerMapper.getNoticeArticle(notice_id);
+		return result;
+	}
+
+	@Override
+	public int noticeHitUp(int notice_id) {
+		// TODO Auto-generated method stub
+		int result;
+		CustomerMapper customerMapper = sqlSession.getMapper(CustomerMapper.class);
+		result = customerMapper.noticeHitUp(notice_id);
+		
+		return result;
+	}
+
+	
+	@Override
+	public ArrayList<FaqVO> getFaqList() {
+		// TODO Auto-generated method stub
+		ArrayList<FaqVO> list = new ArrayList<FaqVO>();
+		CustomerMapper customerMapper = sqlSession.getMapper(CustomerMapper.class);
+		list = customerMapper.getFaqList();
+		return list;
+	}
 }

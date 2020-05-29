@@ -1,0 +1,223 @@
+1일차 typescript환경설정 및 작성법
+
+ c:\webtest
+       9.web=====es5(자바스크립트기본)=>es6(리액트,뷰)=>typescript===>React.js,Vue.js
+                                         gulp서버->4.x버전 이상
+                                                     ->3.9.1버전
+        1.typescript->내일까지(프로그램 설치및 환경설정),typescript,es6 핵심문법
+---------------------------------------------------------------------------------------
+
+1.Node.js 설치->프로그램을 설치=>npm,yarn 명령어를 사용
+                    1.서버를 가동===>웹프로그래밍->JSP
+                                                               톰캣서버
+                    2.npm명령어때문에=>최신버전 14버전
+---------------------------------------------------------
+C:\Users\KITCOOP>node -v ===================>node.js 설치(X)
+'node'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
+배치 파일이 아닙니다.
+
+C:\Users\KITCOOP>npm -v ->(프로그램 설치,삭제,리스트 확인,,,명령어)
+'npm'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
+배치 파일이 아닙니다.
+
+CLI 환경->Command Line Interface 환경
+---------------------------------------------------
+  https://nodejs.org/en/
+
+최신버전 14버전->gulp서버를 사용X->수동으로 작업을 하면 된다.
+
+이전버전 11버전->gulp서버를 사용하기위해서 ->장점->컴파일을 자동으로 해주는 기능
+  ->https://nodejs.org/en/download/releases/    이전버전 설치시 링크
+==============================================
+C:\Program Files\nodejs\  =>설치경로
+
+
+C:\Users\KITCOOP>node -v  ->node.js 확인명령어
+v11.15.0
+
+C:\Users\KITCOOP>npm -v ->프로그램설치,삭제,리스트확인,,,
+6.7.0 =>최신버전으로 업그레이드 할려면?
+                            
+C:\Users\KITCOOP>npm i npm to update  =>npm을 업그레이드 하는 경우
+                                    ===
+                                    업그레이드 할 모듈명
+
+      다시한번 확인->npm -v로 확인할것.
+C:\Users\KITCOOP>npm i npm to update
+npm WARN deprecated set-value@0.3.3: Critical bug fixed in v3.0.1, please upgrade to the latest version.
+npm WARN deprecated set-value@0.4.3: Critical bug fixed in v3.0.1, please upgrade to the latest version.
+npm WARN deprecated set-value@0.2.0: Critical bug fixed in v3.0.1, please upgrade to the latest version.
+npm WARN saveError ENOENT: no such file or directory, open 'C:\Users\KITCOOP\package.json'
+npm notice created a lockfile as package-lock.json. You should commit this file.
+npm WARN enoent ENOENT: no such file or directory, open 'C:\Users\KITCOOP\package.json'
+npm WARN KITCOOP No description
+npm WARN KITCOOP No repository field.
+npm WARN KITCOOP No README data
+npm WARN KITCOOP No license field.
+
++ update@0.7.4
++ to@0.2.9
++ npm@6.14.5
+added 1103 packages from 1005 contributors and audited 23129 packages in 90.613s
+found 102 vulnerabilities (17 low, 4 moderate, 81 high)
+  run `npm audit fix` to fix them, or `npm audit` for details
+
+C:\Users\KITCOOP>
+===========================================
+2.Typescript를 설치=>es6
+
+형식) npm install -g 설치할 프로그램명<->npm uninstall -g 제거할 프로그램명(설치해제)
+              ------옵션        설치할 프로그램명->가장 최신 버전이  설치된다.
+                                   ** 설치할 프로그램명@특정버전명(3.9.1) ** =>기억
+
+  g 옵션(O)=>전역설치=>현재 폴더의 위치와 상관없이 다른 폴더내에서도 사용이 가능
+                              =>
+  g 옵션(X)=>지역설치=>현재 설치된 폴더내에서만 명령어를 사용이 가능
+                                node_modules폴더생성되면서 관련된 파일 다운로드
+                              =>node_modules\typescript\bin\tsc
+
+C:\Users\KITCOOP\AppData\Roaming\npm\tsc -> C:\Users\KITCOOP\AppData\Roaming\npm\node_modules\typescript\bin\tsc
+              계정명
+C:\Users\KITCOOP\AppData\Roaming\npm\tsserver -> C:\Users\KITCOOP\AppData\Roaming\npm\node_modules\typescript\bin\tsserver
+============================
++ typescript@3.8.3 =>현재 가장 최신버전
+============================
+added 1 package from 1 contributor in 2.687s
+
+C:\webtest\9.web\1.typescript>
+
+  1.typescript
+       |
+        -src=>HelloWorld.java=====>HelloWorld.class-->java명령어(메모리)
+       |                        ====                         ===
+                 HelloWorld.ts==>컴파일=>HelloWorld.js==>node명령어=>실행
+                               ==      tsc명령어               ==    실행할때 사용하는 명령어
+        -dist =>컴파일된 파일들만 저장(~.js)
+ =======================================================
+ 3.편집기를 설치->https://www.typescriptlang.org/index.html#download-links
+
+                    환경설정=>typescript를 어떻게 사용?=>gulp서버를 이용
+                    ========================================
+ 다운로드 한뒤에 환경설정
+
+컴파일 형식) tsc 예제파일명.ts  <= javac 예제파일명.java
+실행 형식) node 예제파일명.js  <= java  클래스파일명
+===================================================
+4.  gulp서버를 하나 설치->실행
+   gulp@3.9.1 버전으로 설치해서 작업=>4.x버전이상 버그
+
+  Gulp 서버의 개요 및 작성법
+
+Gulp는 프로젝트를 development, production, testing 등의 다른 빌드들로 
+빌드해 줄 수 있으며 많은 플러그인들을 통해 매우 확장성있게 작업할 수 
+있도록 도와주는 유용한 빌드시스템이며, 현재 약 2000여개의 플로그인이 존재합니다.
+
+                             개발             배포         테스트
+
+   사용목적:
+
+    1.웹 서버를 동작=>node.js+express서버설치해서 웹프로그래밍=>게시판
+==================================================
+    ** 2.Sass 를 CSS 로 컴파일=>언어의 자동컴파일 구현
+    3.편집기 툴에서 파일을 저장할 때마다 웹브라우저를 reload 
+      하여 새로고침없이 브라우저를 갱신 =>자동 새로 고침 기능=>버그
+     4. 배포를 위한 CSS, JS, fonts, and images 등의 리소스를 최적화=>리소스 관리
+
+    대개 전역적으로 Gulp 를 설치했다 하더라도 개별적인 프로젝트에서 Gulp 를
+             -g
+    사용하려면 로컬 설치가 필요합니다.=>-g(X)
+
+ ex)**  gulp서버를 실행하기위해서 typescript를 한번 더 설치해야 된다.(로컬 설치) **
+------------------------------------------------------------------------------------------
+  파일->Auto Save=>자동 저장기능 반드시 체크
+          Preferences=>Settings=>폰트크기 조절
+-----------------------------------------------------------------------------------------  
+
+PS C:\webtest\9.web\1.typescript\src> tsc test1.ts
+PS C:\webtest\9.web\1.typescript\src> node test1.js
+
+컴파일->실행
+자동으로 컴파일을 해서=>~.js파일까지만 자동으로 해준다면
+=========================================
+
+4.gulp 서버를 설치해서 작업
+
+C:\webtest\9.web\1.typescript>npm install -g gulp-cli
+npm WARN deprecated urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
+npm WARN deprecated resolve-url@0.2.1: https://github.com/lydell/resolve-url#deprecated
+C:\Users\KITCOOP\AppData\Roaming\npm\gulp -> C:\Users\KITCOOP\AppData\Roaming\npm\node_modules\gulp-cli\bin\gulp.js
++ gulp-cli@2.2.0 =>가장 최신 버전
+added 237 packages from 156 contributors in 16.039s
+
+C:\webtest\9.web\1.typescript>
+ gulp서버를 support해주는 플러그인 프로그램을 같이 설정(사용목적)
+==============================================
+
+Gulp-typescript->typescript와 연관된 플러그인 
+Gulp-webserver->웹서버처럼 동작하게 하는 플러그인
+Gulp-livereload->웹브라우저를 리로드 하기 위한 플러그인=>새로고침
+Gulp-souremaps->코드상의 위치를 알려주는 플러그인(소스맵)
+                        컴파일할 파일의 위치
+
+작성순서->gulp에 대한 내용(읽어볼것)
+http://programmingsummaries.tistory.com/377
+==============================================
+
+C:\webtest\9.web\1.typescript>npm install gulp@3.9.1 gulp-typescript gulp-sourcemaps gulp-webserver gulp-livereload
+npm WARN deprecated gulp-util@3.0.8: gulp-util is deprecated - replace it, following the guidelines at https://medium.com/gulpjs/gulp-util-ca3b1f9f9ac5
+npm WARN deprecated resolve-url@0.2.1: https://github.com/lydell/resolve-url#deprecated
+npm WARN deprecated urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
+npm WARN deprecated minimatch@2.0.10: Please update to minimatch 3.0.2 or higher to avoid a RegExp DoS issue
+npm WARN deprecated minimatch@0.2.14: Please update to minimatch 3.0.2 or higher to avoid a RegExp DoS issue
+npm WARN deprecated graceful-fs@1.2.3: please upgrade to graceful-fs 4 for compatibility with current and future versions of Node.js
+npm WARN deprecated natives@1.1.6: This module relies on Node.js's internals and will break at some point. Do not use it, and update to graceful-fs@4.x.
+npm WARN deprecated gulp-util@2.2.20: gulp-util is deprecated - replace it, following the guidelines at https://medium.com/gulpjs/gulp-util-ca3b1f9f9ac5
+npm WARN saveError ENOENT: no such file or directory, open 'C:\webtest\9.web\1.typescript\package.json'
+npm notice created a lockfile as package-lock.json. You should commit this file.
+npm WARN enoent ENOENT: no such file or directory, open 'C:\webtest\9.web\1.typescript\package.json'
+npm WARN gulp-typescript@6.0.0-alpha.1 requires a peer of typescript@~2.7.1 || >=2.8.0-dev || >=2.9.0-dev || ~3.0.0 || >=3.0.0-dev || >=3.1.0-dev || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.7.0-dev  but none is installed. You must install peer dependencies yourself.
+npm WARN 1.typescript No description
+npm WARN 1.typescript No repository field.
+npm WARN 1.typescript No README data
+npm WARN 1.typescript No license field.
+
++ gulp-sourcemaps@2.6.5
++ gulp-webserver@0.9.1
+========================================
++ gulp@3.9.1 ========>node.js 11버전과 호환성때문에
+========================================
++ gulp-livereload@4.0.2
++ gulp-typescript@6.0.0-alpha.1
+added 528 packages from 355 contributors and audited 1957 packages in 32.287s
+found 11 vulnerabilities (2 low, 8 high, 1 critical)
+  run `npm audit fix` to fix them, or `npm audit` for details
+
+C:\webtest\9.web\1.typescript>
+
+==>gulp서버를 실행->자동으로 컴파일=>특정위치로 복사를 해달라
+                              소스코드가 변동->자동으로 감지->다시 재컴파일 시켜달라
+=>gulp가 설치된 폴더->gulpfile.js라고 저장
+
+============================================
+5.gulp서버를 가동시킬 수 있는 실행파일을 작성
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

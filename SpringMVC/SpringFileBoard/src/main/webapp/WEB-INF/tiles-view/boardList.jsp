@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<!-- 검색기능을 테이블태그 위에 설정 -->
 <form action="list.do" name="search" method="get" onsubmit="return searchCheck()">
 	<table align="center" width="200" border="0" cellspacing="0" cellpagging="2">
 		<tr>
@@ -36,17 +37,23 @@
 		<td width="100">날짜</td>
 		<td width="70">조회수</td>
 	</tr>
-	
+	<!-- 레코드가 없으면  -->
+	<c:if test="${count==0}">
+	  <tr>
+	      <td colspan="5" align="center">등록된 게시물이 없습니다.</td>
+	  </tr>
+	</c:if>
+	<c:forEach var="article" items="${list}">
 		<tr>
-			<td align="center">3</td>
-			<td><a href="detail.do?seq=${article.seq }">게시판의 글쓰기</a></td>
-			<td>홍길동</td>
-			<td>2015-05-28</td>
-			<td>23</td>
+			<td align="center">${article.seq}</td>
+			<td><a href="detail.do?seq=${article.seq }">${article.title}</a></td>
+			<td>${article.writer}</td>
+			<td>${article.regdate}</td>
+			<td>${article.hit}</td>
 		</tr>
-	
-	<tr>
-		<td align="center" colspan="5">${pagingHtml }</td>
+	</c:forEach>
+	<tr><!-- 링크문자열  -->
+		<td align="center" colspan="5">${pagingHtml}</td>
 	</tr>
 </table>
 

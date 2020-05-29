@@ -3,15 +3,6 @@
      PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
      "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.hwig.shop.MemberMapper">
- 	<resultMap type="MemberVO" id="MemberResultMap">
- 		<result property="mem_id" column="MEM_ID"/>
- 		<result property="mem_pw" column="MEM_PW"/>
- 		<result property="mem_tel" column="MEM_TEL"/>
- 		<result property="mem_name" column="MEM_NAME"/>
- 		<result property="mem_addr" column="MEM_ADDR"/>
- 		<result property="mem_email" column="MEM_EMAIL"/>
- 		<result property="mem_regdate" column="MEM_REGDATE"/>
- 	</resultMap>
  	
  	
 	<select id="login" parameterType="com.hwig.shop.MemberVO" resultType="com.hwig.shop.MemberVO">
